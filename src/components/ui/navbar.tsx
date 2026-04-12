@@ -2,15 +2,18 @@
 
 import * as React from "react"
 import { useEffect, useRef, useState } from "react"
-import { Navigate, useNavigate } from "react-router"
+import { useNavigate } from "react-router"
+
+// Components
 import { Button } from "@/components/ui/button"
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+// import {
+//   NavigationMenu,
+//   NavigationMenuItem,
+//   NavigationMenuList,
+// } from "@/components/ui/navigation-menu"
+// import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
+import { Moon, Sun } from "lucide-react"
 
 // Simple logo component for the navbar
 const Logo = (props: React.SVGAttributes<SVGElement>) => {
@@ -103,29 +106,41 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
     },
     ref,
   ) => {
-    const [isMobile, setIsMobile] = useState(false)
+    // const [isMobile, setIsMobile] = useState(false)
+    const [darkMode, setDarkMode] = useState(localStorage.theme === "dark" ? true : false)
     const containerRef = useRef<HTMLElement>(null)
     const navigate = useNavigate()
 
+    const onLogoClick = () => navigate(logoHref)
+    const onSignInClick = () => navigate(signInHref)
+    const onCtaClick = () => navigate(ctaHref)
+
     useEffect(() => {
-      const checkWidth = () => {
-        if (containerRef.current) {
-          const width = containerRef.current.offsetWidth
-          setIsMobile(width < 768) // 768px is md breakpoint
-        }
-      }
+      document.documentElement.classList.toggle("dark",  
+        localStorage.theme === "dark" 
+        || (!("theme" in localStorage) 
+        && window.matchMedia("(prefers-color-scheme: dark)").matches));
+    }, [darkMode]); 
 
-      checkWidth()
+    // useEffect(() => {
+    //   const checkWidth = () => {
+    //     if (containerRef.current) {
+    //       const width = containerRef.current.offsetWidth
+    //       setIsMobile(width < 768) // 768px is md breakpoint
+    //     }
+    //   }
 
-      const resizeObserver = new ResizeObserver(checkWidth)
-      if (containerRef.current) {
-        resizeObserver.observe(containerRef.current)
-      }
+    //   checkWidth()
 
-      return () => {
-        resizeObserver.disconnect()
-      }
-    }, [])
+    //   const resizeObserver = new ResizeObserver(checkWidth)
+    //   if (containerRef.current) {
+    //     resizeObserver.observe(containerRef.current)
+    //   }
+
+    //   return () => {
+    //     resizeObserver.disconnect()
+    //   }
+    // }, [])
 
     // Combine refs
     const combinedRef = React.useCallback(
@@ -153,7 +168,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
           {/* Left side */}
           <div className="flex items-center gap-2">
             {/* Mobile menu trigger */}
-            {isMobile && (
+            {/* {isMobile && (
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -187,18 +202,18 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                   </NavigationMenu>
                 </PopoverContent>
               </Popover>
-            )}
+            )} */}
             {/* Main nav */}
             <div className="flex items-center gap-6">
               <button
                 type="button"
                 className="flex items-center space-x-2 text-primary hover:text-primary/90 transition-colors cursor-pointer"
-                onClick={e => e.preventDefault()}
+                onClick={() => onLogoClick()}
               >
                 <div className="text-2xl">{logo}</div>
-                <span className="hidden font-bold text-xl sm:inline-block">shadcn.io</span>
+                <span className="hidden font-bold text-xl sm:inline-block">rada</span>
               </button>
-              {/* Navigation menu */}
+              {/* Navigation menu
               {!isMobile && (
                 <NavigationMenu className="flex">
                   <NavigationMenuList className="gap-1">
@@ -220,17 +235,27 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                     ))}
                   </NavigationMenuList>
                 </NavigationMenu>
-              )}
+              )} */}
             </div>
           </div>
           {/* Right side */}
           <div className="flex items-center gap-3">
             <Button
-              className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
-              onClick={e => {
-                e.preventDefault()
-                navigate(signInHref)
-              }}
+              className="font-medium h-9 w-9 hover:bg-accent hover:text-accent-foreground duration-100"
+              variant="ghost"
+              onClick={() => {
+                localStorage.theme = !darkMode ? "dark" : "light";
+                setDarkMode(prev => !prev);
+              }}>
+              { darkMode ? (
+                <Moon strokeWidth={2} size={24} />
+              ) : (
+                <Sun strokeWidth={2} size={24} />
+              )}
+            </Button>
+            <Button
+              className="text-sm font-medium px-4 h-9 hover:bg-accent hover:text-accent-foreground"
+              onClick={() => onSignInClick()}
               size="sm"
               variant="ghost"
             >
@@ -238,10 +263,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
             </Button>
             <Button
               className="text-sm font-medium px-4 h-9 rounded-md shadow-sm"
-              onClick={e => {
-                e.preventDefault()
-                navigate(ctaHref)
-              }}
+              onClick={() => onCtaClick()}
               size="sm"
             >
               {ctaText}
