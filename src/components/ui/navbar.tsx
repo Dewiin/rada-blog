@@ -164,7 +164,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
         ref={combinedRef}
         {...(props as any)}
       >
-        <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between gap-4">
+        <div className="container mx-auto flex h-18 max-w-screen-2xl items-center justify-between gap-4">
           {/* Left side */}
           <div className="flex items-center gap-2">
             {/* Mobile menu trigger */}
@@ -211,7 +211,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 onClick={() => onLogoClick()}
               >
                 <div className="text-2xl">{logo}</div>
-                <span className="hidden font-bold text-xl sm:inline-block">rada</span>
+                <span className="hidden font-bold text-2xl sm:inline-block">rada</span>
               </button>
               {/* Navigation menu
               {!isMobile && (

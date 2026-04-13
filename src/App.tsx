@@ -1,8 +1,7 @@
 // Screens
 import { LandingScreen } from "./components/screens/HomeScreen";
-import { SignupScreen } from "./components/screens/SignupScreen";
-import { LoginScreen } from "./components/screens/LoginScreen";
 import { BlogScreen } from "./components/screens/BlogScreen";
+import { PageNotFoundScreen } from "./components/screens/PageNotFoundScreen";
 
 // Components
 import { Navbar } from "./components/ui/navbar";
@@ -18,9 +17,8 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={ <LandingScreen/> } />
-          <Route path="/signup" element={ <SignupScreen /> } />
-          <Route path="/login" element={ <LoginScreen /> } />
           <Route path="/blog/:id" element={ <BlogScreen /> } />
+          <Route path="/*" element={ <PageNotFoundScreen /> } />
         </Routes>
       </BrowserRouter>
     </>
