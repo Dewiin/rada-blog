@@ -6,6 +6,7 @@ import { useNavigate } from "react-router"
 
 // Components
 import { Button } from "@/components/ui/button"
+import { AuthForm } from "@/components/AuthForm"
 // import {
 //   NavigationMenu,
 //   NavigationMenuItem,
@@ -99,9 +100,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
       logoHref = "/",
       navigationLinks = defaultNavigationLinks,
       signInText = "Log In",
-      signInHref = "/login",
       ctaText = "Sign Up",
-      ctaHref = "/signup",
       ...props
     },
     ref,
@@ -112,8 +111,6 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
     const navigate = useNavigate()
 
     const onLogoClick = () => navigate(logoHref)
-    const onSignInClick = () => navigate(signInHref)
-    const onCtaClick = () => navigate(ctaHref)
 
     useEffect(() => {
       document.documentElement.classList.toggle("dark",  
@@ -253,21 +250,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 <Sun strokeWidth={2} size={24} />
               )}
             </Button>
-            <Button
-              className="text-sm font-medium px-4 h-9 hover:bg-accent hover:text-accent-foreground"
-              onClick={() => onSignInClick()}
-              size="sm"
-              variant="ghost"
-            >
-              {signInText}
-            </Button>
-            <Button
-              className="text-sm font-medium px-4 h-9 rounded-md shadow-sm"
-              onClick={() => onCtaClick()}
-              size="sm"
-            >
-              {ctaText}
-            </Button>
+            <AuthForm signInText={signInText} ctaText={ctaText} />
           </div>
         </div>
       </header>
@@ -278,12 +261,3 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
 Navbar.displayName = "Navbar"
 
 export { Logo, HamburgerIcon }
-
-// Demo
-export function Demo() {
-  return (
-    <div className="fixed inset-0">
-      <Navbar />
-    </div>
-  )
-}
