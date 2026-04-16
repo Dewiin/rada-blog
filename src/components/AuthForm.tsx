@@ -279,7 +279,7 @@ export function AuthForm({
                             />
                         </FieldGroup>
 
-                        <Button className="w-full">Create Account</Button>
+                        <Button className="w-full">Log In</Button>
 
                         <div className="relative flex items-center gap-2">
                             <Separator className="flex-1" />
