@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import z from "zod"
+import { useAuth } from "@/contexts/AuthContext"
+import z, { check } from "zod"
 
 // Components
 import { Button, GoogleSVG } from "@/components/ui/button"
@@ -22,6 +23,9 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
+
+// API
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 // Username and passphrase parameters
 const USER_LEN_MINIMUM = 6
@@ -67,6 +71,8 @@ export function AuthForm({
     ctaText,
 }: AuthProps) {
     const [mode, setMode] = useState<AuthModes>("signup");
+    const { user, checkToken } = useAuth();
+
     const signupForm = useForm<z.infer<typeof signupSchema>>({
         resolver: zodResolver(signupSchema),
         defaultValues: {
@@ -85,18 +91,49 @@ export function AuthForm({
         mode: "onChange"
     });
 
-    function onSignupSubmit(data: z.infer<typeof signupSchema>) {
+    async function onSignupSubmit(data: z.infer<typeof signupSchema>) {
         // ... loading and signup
-        // ... return error messages if fail
-    
-        console.log(data);
+        try {
+            const response = await fetch(`${VITE_API_URL}/api/auth/signup`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+                credentials: "include",
+            });
+            if(!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            if(result.message) {
+                await checkToken();
+            }
+        } catch (err: any) {
+            throw new Error(`Error in onSignupSubmit: ${err.message}, ${err.stack}`);
+        }
     }
 
-    function onLoginSubmit(data: z.infer<typeof loginSchema>) {
+    async function onLoginSubmit(data: z.infer<typeof loginSchema>) {
         // ... loading and signin
-        // ... return error messages if fail
+        try {
+            const response = await fetch(`${VITE_API_URL}/api/auth/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+                credentials: "include",
+            });
+            if(!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
 
-        console.log(data);
+            const result = await response.json();
+            if(result.message) {
+                await checkToken();
+            }
+            console.log(user);
+        } catch (err: any) {
+            throw new Error(`Error in onLoginSubmit: ${err.message}, ${err.stack}`);
+        }
     }
 
     return (
