@@ -3,6 +3,7 @@
 import * as React from "react"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router"
+import { useAuth } from "@/contexts/AuthContext"
 
 // Components
 import { Button } from "@/components/ui/button"
@@ -107,6 +108,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
   ) => {
     // const [isMobile, setIsMobile] = useState(false)
     const [darkMode, setDarkMode] = useState(localStorage.theme === "dark" ? true : false)
+    const { user } = useAuth();
     const containerRef = useRef<HTMLElement>(null)
     const navigate = useNavigate()
 
@@ -236,22 +238,24 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
             </div>
           </div>
           {/* Right side */}
-          <div className="flex items-center gap-3">
-            <Button
-              className="font-medium h-9 w-9 hover:bg-accent hover:text-accent-foreground duration-100"
-              variant="ghost"
-              onClick={() => {
-                localStorage.theme = !darkMode ? "dark" : "light";
-                setDarkMode(prev => !prev);
-              }}>
-              { darkMode ? (
-                <Moon strokeWidth={2} size={24} />
-              ) : (
-                <Sun strokeWidth={2} size={24} />
-              )}
-            </Button>
-            <AuthForm signInText={signInText} ctaText={ctaText} />
-          </div>
+          {!user && 
+            <div className="flex items-center gap-3">
+              <Button
+                className="font-medium h-9 w-9 hover:bg-accent hover:text-accent-foreground duration-100"
+                variant="ghost"
+                onClick={() => {
+                  localStorage.theme = !darkMode ? "dark" : "light";
+                  setDarkMode(prev => !prev);
+                }}>
+                { darkMode ? (
+                  <Moon strokeWidth={2} size={24} />
+                ) : (
+                  <Sun strokeWidth={2} size={24} />
+                )}
+              </Button>
+              <AuthForm signInText={signInText} ctaText={ctaText} />
+            </div>
+          }
         </div>
       </header>
     )

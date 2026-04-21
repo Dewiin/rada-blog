@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useAuth } from "@/contexts/AuthContext"
-import z, { check } from "zod"
+import z from "zod"
 
 // Components
 import { Button, GoogleSVG } from "@/components/ui/button"
@@ -130,7 +130,6 @@ export function AuthForm({
             if(result.message) {
                 await checkToken();
             }
-            console.log(user);
         } catch (err: any) {
             throw new Error(`Error in onLoginSubmit: ${err.message}, ${err.stack}`);
         }
