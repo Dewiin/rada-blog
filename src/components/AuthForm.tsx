@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useAuth } from "@/contexts/AuthContext"
-import z, { check } from "zod"
+import z from "zod"
 
 // Components
 import { Button, GoogleSVG } from "@/components/ui/button"
@@ -83,7 +83,7 @@ export function AuthForm({
     ctaText,
 }: AuthProps) {
     const [mode, setMode] = useState<AuthModes>("signup");
-    const { user, checkToken, setIsLoading } = useAuth();
+    const { user, setUser, checkToken, isLoading, setIsLoading } = useAuth();
 
     const signupForm = useForm<z.infer<typeof signupSchema>>({
         resolver: zodResolver(signupSchema),
@@ -103,9 +103,9 @@ export function AuthForm({
         mode: "onChange"
     });
 
-    function onSignupSubmit(data: z.infer<typeof signupSchema>) {
+    async function onSignupSubmit(data: z.infer<typeof signupSchema>) {
         setIsLoading(true);
-        toast.promise(
+        await toast.promise(
             async () => {
                 const response = await fetch(`${VITE_API_URL}/api/auth/signup`, {
                     method: "POST",
@@ -127,17 +127,17 @@ export function AuthForm({
                     }); 
                     await checkToken();
                 }
+                setIsLoading(false);
             }, {
                 position: "top-center",
                 loading: "Signing up...",
             }
         );
-        setIsLoading(false);
     }   
         
-    function onLoginSubmit(data: z.infer<typeof loginSchema>) {
+    async function onLoginSubmit(data: z.infer<typeof loginSchema>) {
         setIsLoading(true);
-        toast.promise(
+        await toast.promise(
             async() => {
                 const response = await fetch(`${VITE_API_URL}/api/auth/login`, {
                     method: "POST",
@@ -157,17 +157,17 @@ export function AuthForm({
                     }); 
                     await checkToken();
                 }
+                setIsLoading(false);
             }, {
                 position: "top-center",
                 loading: "Logging in..."
             }
         );
-        setIsLoading(false);
     }
 
-    function onLogoutSubmit() {
+    async function onLogoutSubmit() {
         setIsLoading(true);
-        toast.promise(
+        await toast.promise(
             async () => {
                 const response = await fetch(`${VITE_API_URL}/api/auth/logout`, {
                     method: "GET",
@@ -180,17 +180,17 @@ export function AuthForm({
                         position: "top-center",
                     });
                 } else {
+                    setUser(null);
                     if(result.message) toast.success(result.message, {
                         position: "top-center"
                     }); 
-                    await checkToken();
                 }
+                setIsLoading(false);
             }, {
                 position: "top-center",
                 loading: "Logging out..."
             }
         );
-        setIsLoading(false);
     }
 
     return (
@@ -301,7 +301,7 @@ export function AuthForm({
                                     </span>
                                     <Separator className="flex-1" />
                                 </div>
-                                <Button className="w-full" variant="outline">
+                                <Button className="w-full" variant="outline" type="button">
                                     <GoogleSVG />
                                     Continue with Google
                                 </Button>
@@ -382,7 +382,7 @@ export function AuthForm({
                                     </span>
                                     <Separator className="flex-1" />
                                 </div>
-                                <Button className="w-full" variant="outline">
+                                <Button className="w-full" variant="outline" type="button">
                                     <GoogleSVG />
                                     Continue with Google
                                 </Button>

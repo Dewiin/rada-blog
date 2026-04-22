@@ -32,8 +32,11 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     }, []);
 
     useEffect(() => {
-        document.body.style.cursor = isLoading ? 'wait' : 'default';
-        console.log("IsLoading: ", isLoading);
+        if (isLoading) {
+            document.body.style.pointerEvents = "none";
+        } else {
+            document.body.style.pointerEvents = "auto";
+        }
     }, [isLoading]);
 
     async function checkToken() {
