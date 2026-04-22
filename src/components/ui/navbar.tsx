@@ -8,12 +8,6 @@ import { useAuth } from "@/contexts/AuthContext"
 // Components
 import { Button } from "@/components/ui/button"
 import { AuthForm } from "@/components/AuthForm"
-// import {
-//   NavigationMenu,
-//   NavigationMenuItem,
-//   NavigationMenuList,
-// } from "@/components/ui/navigation-menu"
-// import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { Moon, Sun } from "lucide-react"
 
@@ -238,10 +232,9 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
             </div>
           </div>
           {/* Right side */}
-          {!user && 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <Button
-                className="font-medium h-9 w-9 hover:bg-accent hover:text-accent-foreground duration-100"
+                className="font-medium h-10 w-10 hover:bg-accent hover:text-accent-foreground duration-100"
                 variant="ghost"
                 onClick={() => {
                   localStorage.theme = !darkMode ? "dark" : "light";
@@ -255,7 +248,6 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
               </Button>
               <AuthForm signInText={signInText} ctaText={ctaText} />
             </div>
-          }
         </div>
       </header>
     )

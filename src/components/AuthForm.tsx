@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useAuth } from "@/contexts/AuthContext"
-import z from "zod"
+import z, { check } from "zod"
 
 // Components
 import { Button, GoogleSVG } from "@/components/ui/button"
@@ -21,8 +21,20 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
+import { toast } from "sonner"
+import { User, Settings, LogOut } from "lucide-react"
 
 // API
 const VITE_API_URL = import.meta.env.VITE_API_URL;
@@ -71,7 +83,7 @@ export function AuthForm({
     ctaText,
 }: AuthProps) {
     const [mode, setMode] = useState<AuthModes>("signup");
-    const { user, checkToken } = useAuth();
+    const { user, checkToken, setIsLoading } = useAuth();
 
     const signupForm = useForm<z.infer<typeof signupSchema>>({
         resolver: zodResolver(signupSchema),
@@ -91,255 +103,348 @@ export function AuthForm({
         mode: "onChange"
     });
 
-    async function onSignupSubmit(data: z.infer<typeof signupSchema>) {
-        // ... loading and signup
-        try {
-            const response = await fetch(`${VITE_API_URL}/api/auth/signup`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-                credentials: "include",
-            });
-            if(!response.ok) {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
+    function onSignupSubmit(data: z.infer<typeof signupSchema>) {
+        setIsLoading(true);
+        toast.promise(
+            async () => {
+                const response = await fetch(`${VITE_API_URL}/api/auth/signup`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                    credentials: "include",
+                });
+                const result = await response.json();
+                if(!response.ok) {
+                    if(response.status === 409) {
+                        toast.warning(result.error, {
+                            position: "top-center",
+                            description: "Please try again with a different username."
+                        });
+                    }
+                } else {
+                    if(result.message) toast.success(result.message, {
+                        position: "top-center"
+                    }); 
+                    await checkToken();
+                }
+            }, {
+                position: "top-center",
+                loading: "Signing up...",
             }
-
-            const result = await response.json();
-            if(result.message) {
-                await checkToken();
+        );
+        setIsLoading(false);
+    }   
+        
+    function onLoginSubmit(data: z.infer<typeof loginSchema>) {
+        setIsLoading(true);
+        toast.promise(
+            async() => {
+                const response = await fetch(`${VITE_API_URL}/api/auth/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                    credentials: "include",
+                });
+                const result = await response.json();
+    
+                if(!response.ok) {
+                    toast.warning(result.error, {
+                        position: "top-center",
+                    });
+                } else {
+                    if(result.message) toast.success(result.message, {
+                        position: "top-center"
+                    }); 
+                    await checkToken();
+                }
+            }, {
+                position: "top-center",
+                loading: "Logging in..."
             }
-        } catch (err: any) {
-            throw new Error(`Error in onSignupSubmit: ${err.message}, ${err.stack}`);
-        }
+        );
+        setIsLoading(false);
     }
 
-    async function onLoginSubmit(data: z.infer<typeof loginSchema>) {
-        // ... loading and signin
-        try {
-            const response = await fetch(`${VITE_API_URL}/api/auth/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-                credentials: "include",
-            });
-            if(!response.ok) {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
+    function onLogoutSubmit() {
+        setIsLoading(true);
+        toast.promise(
+            async () => {
+                const response = await fetch(`${VITE_API_URL}/api/auth/logout`, {
+                    method: "GET",
+                    credentials: "include",
+                });
+                const result = await response.json();
+    
+                if(!response.ok) {
+                    toast.warning(result.error, {
+                        position: "top-center",
+                    });
+                } else {
+                    if(result.message) toast.success(result.message, {
+                        position: "top-center"
+                    }); 
+                    await checkToken();
+                }
+            }, {
+                position: "top-center",
+                loading: "Logging out..."
             }
-
-            const result = await response.json();
-            if(result.message) {
-                await checkToken();
-            }
-        } catch (err: any) {
-            throw new Error(`Error in onLoginSubmit: ${err.message}, ${err.stack}`);
-        }
+        );
+        setIsLoading(false);
     }
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button
-                    className="text-sm font-medium px-4 h-9 hover:bg-accent hover:text-accent-foreground"
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setMode("login")}
-                >
-                    {signInText}
-                </Button>
-            </DialogTrigger>
-            <DialogTrigger asChild>
-                <Button
-                    className="text-sm font-medium px-4 h-9 rounded-md shadow-sm"
-                    size="sm"
-                    onClick={() => setMode("signup")}
-                >
-                    {ctaText}
-                </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-                {mode === "signup" && 
-                <>
-                    <DialogHeader>
-                        <DialogTitle>Create an account</DialogTitle>
-                        <DialogDescription>Enter your details below to create your account.</DialogDescription>
-                    </DialogHeader>
-                    <form 
-                    onSubmit={signupForm.handleSubmit(onSignupSubmit)}
-                    className="flex flex-col gap-4"
-                    >
-                        <FieldGroup className="gap-3">
-                            <Controller
-                                name="username"
-                                control={signupForm.control}
-                                render={({ field, fieldState }) => (
-                                    <Field 
-                                    data-invalid={fieldState.invalid} 
-                                    className="gap-1"
-                                    >
-                                        <FieldLabel>
-                                            Username
-                                        </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            aria-invalid={fieldState.invalid}
-                                            autoComplete="off"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError errors={[fieldState.error]} />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="password"
-                                control={signupForm.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid} className="gap-1">
-                                        <FieldLabel>
-                                            Password
-                                        </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            type="password"
-                                            aria-invalid={fieldState.invalid}
-                                            autoComplete="new-password"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError errors={[fieldState.error]} />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="confirmPassword"
-                                control={signupForm.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid} className="gap-1">
-                                        <FieldLabel>
-                                            Confirm Password
-                                        </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            type="password"
-                                            aria-invalid={fieldState.invalid}
-                                            autoComplete="new-password"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError errors={[fieldState.error]} />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                        </FieldGroup>
-
-                        <Button className="w-full">Create Account</Button>
-
-                        <div className="relative flex items-center gap-2">
-                            <Separator className="flex-1" />
-                            <span className="shrink-0 px-2 text-muted-foreground text-xs uppercase">
-                                Or continue with
-                            </span>
-                            <Separator className="flex-1" />
-                        </div>
-                        <Button className="w-full" variant="outline">
-                            <GoogleSVG />
-                            Continue with Google
-                        </Button>
-                    </form>
-                    <DialogFooter className="sm:justify-center">
-                        <p className="text-muted-foreground text-sm">
-                            Already have an account?{" "}
-                            <button className="font-medium underline cursor-pointer" type="button"
+        <>
+            {!user ?
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button
+                            className="text-sm font-medium px-4 h-9 hover:bg-accent hover:text-accent-foreground"
+                            size="sm"
+                            variant="ghost"
                             onClick={() => setMode("login")}
-                            >
-                                Sign in
-                            </button>
-                        </p>
-                    </DialogFooter>
-                </>
-                }
-                {mode === "login" && 
-                <>
-                    <DialogHeader>
-                        <DialogTitle>Welcome Back</DialogTitle>
-                        <DialogDescription>Enter your credentials to access your account.</DialogDescription>
-                    </DialogHeader>
-                    <form 
-                    onSubmit={loginForm.handleSubmit(onLoginSubmit)}
-                    className="flex flex-col gap-4"
-                    >
-                        <FieldGroup className="gap-3">
-                            <Controller
-                                name="username"
-                                control={loginForm.control}
-                                render={({ field, fieldState }) => (
-                                    <Field 
-                                    data-invalid={fieldState.invalid} 
-                                    className="gap-1"
-                                    >
-                                        <FieldLabel>
-                                            Username
-                                        </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            aria-invalid={fieldState.invalid}
-                                            autoComplete="off"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError errors={[fieldState.error]} />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="password"
-                                control={loginForm.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid} className="gap-1">
-                                        <FieldLabel>
-                                            Password
-                                        </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            type="password"
-                                            aria-invalid={fieldState.invalid}
-                                            autoComplete="new-password"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError errors={[fieldState.error]} />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                        </FieldGroup>
-
-                        <Button className="w-full">Log In</Button>
-
-                        <div className="relative flex items-center gap-2">
-                            <Separator className="flex-1" />
-                            <span className="shrink-0 px-2 text-muted-foreground text-xs uppercase">
-                                Or continue with
-                            </span>
-                            <Separator className="flex-1" />
-                        </div>
-                        <Button className="w-full" variant="outline">
-                            <GoogleSVG />
-                            Continue with Google
+                        >
+                            {signInText}
                         </Button>
-                    </form>
-                    <DialogFooter className="sm:justify-center">
-                        <p className="text-muted-foreground text-sm">
-                            Don't have an account?{" "}
-                            <button className="font-medium underline cursor-pointer" type="button"
+                    </DialogTrigger>
+                    <DialogTrigger asChild>
+                        <Button
+                            className="text-sm font-medium px-4 h-9 rounded-md shadow-sm"
+                            size="sm"
                             onClick={() => setMode("signup")}
+                        >
+                            {ctaText}
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                        {mode === "signup" && 
+                        <>
+                            <DialogHeader>
+                                <DialogTitle>Create an account</DialogTitle>
+                                <DialogDescription>Enter your details below to create your account.</DialogDescription>
+                            </DialogHeader>
+                            <form 
+                            onSubmit={signupForm.handleSubmit(onSignupSubmit)}
+                            className="flex flex-col gap-4"
                             >
-                                Sign Up
-                            </button>
-                        </p>
-                    </DialogFooter>
-                </>
-                }
-            </DialogContent>
-        </Dialog>
+                                <FieldGroup className="gap-3">
+                                    <Controller
+                                        name="username"
+                                        control={signupForm.control}
+                                        render={({ field, fieldState }) => (
+                                            <Field 
+                                            data-invalid={fieldState.invalid} 
+                                            className="gap-1"
+                                            >
+                                                <FieldLabel>
+                                                    Username
+                                                </FieldLabel>
+                                                <Input
+                                                    {...field}
+                                                    aria-invalid={fieldState.invalid}
+                                                    autoComplete="off"
+                                                />
+                                                {fieldState.invalid && (
+                                                    <FieldError errors={[fieldState.error]} />
+                                                )}
+                                            </Field>
+                                        )}
+                                    />
+                                    <Controller
+                                        name="password"
+                                        control={signupForm.control}
+                                        render={({ field, fieldState }) => (
+                                            <Field data-invalid={fieldState.invalid} className="gap-1">
+                                                <FieldLabel>
+                                                    Password
+                                                </FieldLabel>
+                                                <Input
+                                                    {...field}
+                                                    type="password"
+                                                    aria-invalid={fieldState.invalid}
+                                                    autoComplete="new-password"
+                                                />
+                                                {fieldState.invalid && (
+                                                    <FieldError errors={[fieldState.error]} />
+                                                )}
+                                            </Field>
+                                        )}
+                                    />
+                                    <Controller
+                                        name="confirmPassword"
+                                        control={signupForm.control}
+                                        render={({ field, fieldState }) => (
+                                            <Field data-invalid={fieldState.invalid} className="gap-1">
+                                                <FieldLabel>
+                                                    Confirm Password
+                                                </FieldLabel>
+                                                <Input
+                                                    {...field}
+                                                    type="password"
+                                                    aria-invalid={fieldState.invalid}
+                                                    autoComplete="new-password"
+                                                />
+                                                {fieldState.invalid && (
+                                                    <FieldError errors={[fieldState.error]} />
+                                                )}
+                                            </Field>
+                                        )}
+                                    />
+                                </FieldGroup>
+
+                                <Button className="w-full">Create Account</Button>
+
+                                <div className="relative flex items-center gap-2">
+                                    <Separator className="flex-1" />
+                                    <span className="shrink-0 px-2 text-muted-foreground text-xs uppercase">
+                                        Or continue with
+                                    </span>
+                                    <Separator className="flex-1" />
+                                </div>
+                                <Button className="w-full" variant="outline">
+                                    <GoogleSVG />
+                                    Continue with Google
+                                </Button>
+                            </form>
+                            <DialogFooter className="sm:justify-center">
+                                <p className="text-muted-foreground text-sm">
+                                    Already have an account?{" "}
+                                    <button className="font-medium underline cursor-pointer" type="button"
+                                    onClick={() => setMode("login")}
+                                    >
+                                        Sign in
+                                    </button>
+                                </p>
+                            </DialogFooter>
+                        </>
+                        }
+                        {mode === "login" && 
+                        <>
+                            <DialogHeader>
+                                <DialogTitle>Welcome Back</DialogTitle>
+                                <DialogDescription>Enter your credentials to access your account.</DialogDescription>
+                            </DialogHeader>
+                            <form 
+                            onSubmit={loginForm.handleSubmit(onLoginSubmit)}
+                            className="flex flex-col gap-4"
+                            >
+                                <FieldGroup className="gap-3">
+                                    <Controller
+                                        name="username"
+                                        control={loginForm.control}
+                                        render={({ field, fieldState }) => (
+                                            <Field 
+                                            data-invalid={fieldState.invalid} 
+                                            className="gap-1"
+                                            >
+                                                <FieldLabel>
+                                                    Username
+                                                </FieldLabel>
+                                                <Input
+                                                    {...field}
+                                                    aria-invalid={fieldState.invalid}
+                                                    autoComplete="off"
+                                                />
+                                                {fieldState.invalid && (
+                                                    <FieldError errors={[fieldState.error]} />
+                                                )}
+                                            </Field>
+                                        )}
+                                    />
+                                    <Controller
+                                        name="password"
+                                        control={loginForm.control}
+                                        render={({ field, fieldState }) => (
+                                            <Field data-invalid={fieldState.invalid} className="gap-1">
+                                                <FieldLabel>
+                                                    Password
+                                                </FieldLabel>
+                                                <Input
+                                                    {...field}
+                                                    type="password"
+                                                    aria-invalid={fieldState.invalid}
+                                                    autoComplete="new-password"
+                                                />
+                                                {fieldState.invalid && (
+                                                    <FieldError errors={[fieldState.error]} />
+                                                )}
+                                            </Field>
+                                        )}
+                                    />
+                                </FieldGroup>
+
+                                <Button className="w-full">Log In</Button>
+
+                                <div className="relative flex items-center gap-2">
+                                    <Separator className="flex-1" />
+                                    <span className="shrink-0 px-2 text-muted-foreground text-xs uppercase">
+                                        Or continue with
+                                    </span>
+                                    <Separator className="flex-1" />
+                                </div>
+                                <Button className="w-full" variant="outline">
+                                    <GoogleSVG />
+                                    Continue with Google
+                                </Button>
+                            </form>
+                            <DialogFooter className="sm:justify-center">
+                                <p className="text-muted-foreground text-sm">
+                                    Don't have an account?{" "}
+                                    <button className="font-medium underline cursor-pointer" type="button"
+                                    onClick={() => setMode("signup")}
+                                    >
+                                        Sign Up
+                                    </button>
+                                </p>
+                            </DialogFooter>
+                        </>
+                        }
+                    </DialogContent>
+                </Dialog>
+                :
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="relative h-10 w-10 rounded-sm" variant="ghost">
+                      <Avatar size="sm">
+                        <AvatarImage alt={`@${user.username}`} />
+                        <AvatarFallback>{user.username.substring(0,2)}</AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-64">
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-12 w-12">
+                          <AvatarImage alt={`@${user.username}`} />
+                          <AvatarFallback>{user.username.substring(0,2)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col space-y-1 gap-1">
+                          <p className="font-medium text-sm leading-none">{user.username}</p>
+                          <Badge className="w-fit text-xs" variant="secondary">
+                            {user.role.charAt(0) + user.role.substring(1).toLocaleLowerCase()}
+                          </Badge>
+                        </div>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <User />
+                      View Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Settings />
+                      Account Settings
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem variant="destructive"
+                    onClick={() => onLogoutSubmit()}
+                    >
+                      <LogOut />
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+            }
+        </>
     )
 }
