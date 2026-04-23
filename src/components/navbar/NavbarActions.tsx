@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useAuth } from "@/contexts/AuthContext"
@@ -34,7 +35,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
-import { User, Settings, LogOut } from "lucide-react"
+import { User, Settings, LogOut, Newspaper } from "lucide-react"
 
 // API
 const VITE_API_URL = import.meta.env.VITE_API_URL;
@@ -78,12 +79,13 @@ type AuthProps = {
     ctaText?: string
 }
 type AuthModes = "login" | "signup"
-export function AuthForm({
+export function NavbarActions({
     signInText,
     ctaText,
 }: AuthProps) {
     const [mode, setMode] = useState<AuthModes>("signup");
-    const { user, setUser, checkToken, isLoading, setIsLoading } = useAuth();
+    const { user, setUser, checkToken, setIsLoading } = useAuth();
+    const navigate = useNavigate();
 
     const signupForm = useForm<z.infer<typeof signupSchema>>({
         resolver: zodResolver(signupSchema),
@@ -426,12 +428,22 @@ export function AuthForm({
                         </div>
                       </div>
                     </DropdownMenuLabel>
+                    <DropdownMenuItem 
+                        onClick={() => navigate('/create')}
+                    >
+                      <Newspaper />
+                      Create a Post
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => navigate(`/profile/${user && user.id}`)}
+                    >
                       <User />
                       View Profile
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => navigate(`/settings/${user && user.id}`)}
+                    >
                       <Settings />
                       Account Settings
                     </DropdownMenuItem>

@@ -45,12 +45,14 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
                 method: "GET",
                 credentials: "include"
             });
-            if(!response.ok) {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
-            }
-            
             const result = await response.json();
-            setUser(result);
+
+            if(!response.ok) {
+                if(result.error) console.error(result.error);
+                else console.error(`Error: ${response.status} ${response.statusText}`);
+            } else {
+                setUser(result);
+            }
         } catch (err: any) {
             console.error(`Error in checkToken: ${err.message}, ${err.stack}`);
             setUser(null);

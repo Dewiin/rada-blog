@@ -1,6 +1,9 @@
 // Screens
-import { LandingScreen } from "./components/screens/HomeScreen";
+import { HomeScreen } from "./components/screens/HomeScreen";
 import { BlogScreen } from "./components/screens/BlogScreen";
+import { AccountProfileScreen } from "./components/screens/AccountProfileScreen";
+import { AccountSettingsScreen } from "./components/screens/AccountSettingsScreen";
+import { CreatePostScreen } from "./components/screens/CreatePostScreen";
 import { PageNotFoundScreen } from "./components/screens/PageNotFoundScreen";
 
 // Components
@@ -15,8 +18,11 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={ <LandingScreen/> } />
+        <Route path="/" element={ <HomeScreen/> } />
         <Route path="/blog/:id" element={ <BlogScreen /> } />
+        <Route path="/profile/:userId" element={ <AccountProfileScreen /> } />
+        <Route path="/settings/:userId" element={ <AccountSettingsScreen /> } />
+        <Route path="/create" element={ <CreatePostScreen /> } />
         <Route path="/*" element={ <PageNotFoundScreen /> } />
       </Routes>
     </>

@@ -3,11 +3,10 @@
 import * as React from "react"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router"
-import { useAuth } from "@/contexts/AuthContext"
 
 // Components
 import { Button } from "@/components/ui/button"
-import { AuthForm } from "@/components/AuthForm"
+import { NavbarActions } from "@/components/navbar/NavbarActions"
 import { cn } from "@/lib/utils"
 import { Moon, Sun } from "lucide-react"
 
@@ -102,7 +101,6 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
   ) => {
     // const [isMobile, setIsMobile] = useState(false)
     const [darkMode, setDarkMode] = useState(localStorage.theme === "dark" ? true : false)
-    const { user } = useAuth();
     const containerRef = useRef<HTMLElement>(null)
     const navigate = useNavigate()
 
@@ -246,7 +244,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                   <Sun strokeWidth={2} size={24} />
                 )}
               </Button>
-              <AuthForm signInText={signInText} ctaText={ctaText} />
+              <NavbarActions signInText={signInText} ctaText={ctaText} />
             </div>
         </div>
       </header>
