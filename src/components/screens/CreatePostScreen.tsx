@@ -1,6 +1,4 @@
 import { useAuth } from "@/contexts/AuthContext"
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
 
 // Components
 import { PageForbiddenScreen } from "./PageForbiddenScreen";
