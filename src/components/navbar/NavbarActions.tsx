@@ -428,12 +428,14 @@ export function NavbarActions({
                         </div>
                       </div>
                     </DropdownMenuLabel>
-                    <DropdownMenuItem 
+                    {user && user.role === "AUTHOR" &&
+                        <DropdownMenuItem 
                         onClick={() => navigate('/create')}
-                    >
-                      <Newspaper />
-                      Create a Post
-                    </DropdownMenuItem>
+                        >
+                        <Newspaper />
+                        Create a Post
+                        </DropdownMenuItem>
+                    }
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                         onClick={() => navigate(`/profile/${user && user.id}`)}
