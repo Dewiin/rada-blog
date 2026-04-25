@@ -7,7 +7,7 @@ import { CreatePostScreen } from "./components/screens/CreatePostScreen";
 import { PageNotFoundScreen } from "./components/screens/PageNotFoundScreen";
 
 // Components
-import { Navbar } from "./components/ui/navbar";
+import { Navbar } from "./components/navbar/navbar";
 
 import { Routes, Route } from "react-router-dom";
 import './App.css'

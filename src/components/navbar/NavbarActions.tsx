@@ -433,7 +433,7 @@ export function NavbarActions({
                         onClick={() => navigate('/create')}
                         >
                         <Newspaper />
-                        Create a Post
+                        Write a Post
                         </DropdownMenuItem>
                     }
                     <DropdownMenuSeparator />
