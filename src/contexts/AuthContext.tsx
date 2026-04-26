@@ -13,6 +13,8 @@ type AuthContextProps = {
     checkToken: () => Promise<void>,
     isLoading: boolean,
     setIsLoading: (isLoading: boolean) => void
+    darkMode: boolean,
+    setDarkMode: (darkMode: boolean) => void
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -20,12 +22,19 @@ const AuthContext = createContext<AuthContextProps>({
     setUser: () => {},
     checkToken: async () => {},
     isLoading: false,
-    setIsLoading: () => {}
+    setIsLoading: () => {},
+    darkMode: false,
+    setDarkMode: () => {}
 });
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User|null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [darkMode, setDarkMode] = useState(() => {
+        if (localStorage.theme === "dark") return true;
+        if (localStorage.theme === "light") return false;
+        return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    });
     
     useEffect(() => {
         checkToken();
@@ -38,6 +47,16 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
             document.body.style.pointerEvents = "auto";
         }
     }, [isLoading]);
+
+    useEffect(() => {
+        if (darkMode) {
+            document.documentElement.classList.add("dark");
+            localStorage.theme = "dark";
+        } else {
+            document.documentElement.classList.remove("dark");
+            localStorage.theme = "light";
+        }
+    }, [darkMode]);
 
     async function checkToken() {
         try {  
@@ -64,7 +83,9 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         setUser,
         checkToken,
         isLoading,
-        setIsLoading
+        setIsLoading,
+        darkMode,
+        setDarkMode
     }
 
     return (

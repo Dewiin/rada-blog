@@ -1,8 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { useEffect, useRef, useState } from "react"
+import { useRef } from "react"
 import { useNavigate } from "react-router"
+import { useAuth } from "@/contexts/AuthContext"
 
 // Components
 import { Button } from "@/components/ui/button"
@@ -100,18 +101,11 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
     ref,
   ) => {
     // const [isMobile, setIsMobile] = useState(false)
-    const [darkMode, setDarkMode] = useState(localStorage.theme === "dark" ? true : false)
+    const { darkMode, setDarkMode } = useAuth();
     const containerRef = useRef<HTMLElement>(null)
     const navigate = useNavigate()
 
     const onLogoClick = () => navigate(logoHref)
-
-    useEffect(() => {
-      document.documentElement.classList.toggle("dark",  
-        localStorage.theme === "dark" 
-        || (!("theme" in localStorage) 
-        && window.matchMedia("(prefers-color-scheme: dark)").matches));
-    }, [darkMode]); 
 
     // useEffect(() => {
     //   const checkWidth = () => {
@@ -235,7 +229,6 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 className="font-medium h-10 w-10 hover:bg-accent hover:text-accent-foreground duration-100"
                 variant="ghost"
                 onClick={() => {
-                  localStorage.theme = !darkMode ? "dark" : "light";
                   setDarkMode(prev => !prev);
                 }}>
                 { darkMode ? (
