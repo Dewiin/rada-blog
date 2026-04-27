@@ -1,4 +1,5 @@
 import { useAuth } from "@/contexts/AuthContext"
+import { useTheme } from "@/contexts/ThemeContext";
 import { Editor } from '@tinymce/tinymce-react';
 
 // Components
@@ -10,6 +11,7 @@ const VITE_API_URL = import.meta.env.VITE_API_URL;
 export function CreatePostScreen() {
     const [ apiKey, setApiKey ] = useState<string | undefined>(undefined);
     const { user } = useAuth();
+    const { darkMode } = useTheme();
 
     useEffect(() => {
         async function getApiKey() {
@@ -38,9 +40,10 @@ export function CreatePostScreen() {
 
     return (
         <>
-        {user && user.role === "AUTHOR" ? 
+        {apiKey && user && user.role === "AUTHOR" ? 
         <div className="md:m-36 m-6">
             <Editor
+                key={ darkMode ? "dark" : "light" }
                 apiKey={apiKey}
                 init={{
                     menubar: false,
@@ -56,8 +59,8 @@ export function CreatePostScreen() {
                         'wordcount',
                     ],
                     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline | align lineheight | checklist numlist bullist indent outdent | image',
-                    skin: 'oxide-dark',
-                    content_css: 'tinymce-5-dark'
+                    skin: darkMode ? 'oxide-dark' : 'oxide',
+                    content_css: darkMode ? 'tinymce-5-dark' : 'writer'
                 }}
             />
         </div>
