@@ -3,6 +3,7 @@ import { useNavigate } from "react-router"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useAuth } from "@/contexts/AuthContext"
+import { useUI } from "@/contexts/UIContext"
 import z from "zod"
 
 // Components
@@ -84,7 +85,8 @@ export function NavbarActions({
     ctaText,
 }: AuthProps) {
     const [mode, setMode] = useState<AuthModes>("signup");
-    const { user, setUser, checkToken, setIsLoading } = useAuth();
+    const { user, setUser, checkToken } = useAuth();
+    const { setIsLoading } = useUI();
     const navigate = useNavigate();
 
     const signupForm = useForm<z.infer<typeof signupSchema>>({

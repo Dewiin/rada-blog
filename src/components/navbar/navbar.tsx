@@ -3,7 +3,7 @@
 import * as React from "react"
 import { useRef } from "react"
 import { useNavigate } from "react-router"
-import { useAuth } from "@/contexts/AuthContext"
+import { useTheme } from "@/contexts/ThemeContext"
 
 // Components
 import { Button } from "@/components/ui/button"
@@ -101,7 +101,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
     ref,
   ) => {
     // const [isMobile, setIsMobile] = useState(false)
-    const { darkMode, setDarkMode } = useAuth();
+    const { darkMode, setDarkMode } = useTheme();
     const containerRef = useRef<HTMLElement>(null)
     const navigate = useNavigate()
 
@@ -229,7 +229,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 className="font-medium h-10 w-10 hover:bg-accent hover:text-accent-foreground duration-100"
                 variant="ghost"
                 onClick={() => {
-                  setDarkMode(prev => !prev);
+                  setDarkMode(!darkMode);
                 }}>
                 { darkMode ? (
                   <Moon strokeWidth={2} size={24} />
