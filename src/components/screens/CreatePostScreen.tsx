@@ -1,6 +1,4 @@
 import { useAuth } from "@/contexts/AuthContext"
-import { useTheme } from "@/contexts/ThemeContext";
-import { Editor } from '@tinymce/tinymce-react';
 
 // Components
 import { PageForbiddenScreen } from "./PageForbiddenScreen";
@@ -16,7 +14,6 @@ export function CreatePostScreen() {
     const [ apiKey, setApiKey ] = useState<string | undefined>(undefined);
     const [value, setValue] = useState<Content>("")
     const { user } = useAuth();
-    const { darkMode } = useTheme();
 
     useEffect(() => {
         async function getApiKey() {
