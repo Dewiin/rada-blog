@@ -5,13 +5,16 @@ import { Editor } from '@tinymce/tinymce-react';
 // Components
 import { PageForbiddenScreen } from "./PageForbiddenScreen";
 import { useEffect, useState } from "react";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import type { Content } from "@tiptap/react"
+import { MinimalTiptapEditor } from "@/components/ui/minimal-tiptap"
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 export function CreatePostScreen() {
     const [ apiKey, setApiKey ] = useState<string | undefined>(undefined);
+    const [value, setValue] = useState<Content>("")
     const { user } = useAuth();
     const { darkMode } = useTheme();
 
@@ -43,38 +46,35 @@ export function CreatePostScreen() {
     return (
         <>
         {apiKey && user && user.role === "AUTHOR" ? 
-        <div className="md:mx-40 md:my-16 m-6 flex flex-col gap-4">
-            <div>
-                <Label className="text-xl">
-                    Title:
-                </Label>
-                <Input></Input>
-            </div>
-            <div>
-                <Label className="text-xl">
-                    Content:
-                </Label>
-                <Editor
-                    key={ darkMode ? "dark" : "light" }
-                    apiKey={apiKey}
-                    init={{
-                        menubar: false,
-                        statusbar: false,
-                        height: 600,
-                        plugins: [
-                            'advlist',
-                            'autolink',
-                            'lists',
-                            'link',
-                            'image',
-                            'table',
-                            'wordcount',
-                        ],
-                        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline | align lineheight | checklist numlist bullist indent outdent | image',
-                        skin: darkMode ? 'oxide-dark' : 'oxide',
-                        content_css: darkMode ? 'tinymce-5-dark' : 'writer'
-                    }}
-                />
+        <div className="md:mx-40 md:my-24 my-12 m-6 flex flex-col gap-12">
+            <Label className="text-5xl font-extrabold">
+                Create a Post
+            </Label>
+            <div
+                className="flex flex-col gap-4"
+            >
+                <div>
+                    <Label className="text-md">
+                        Title:
+                    </Label>
+                    <Input className="bg-input/30"></Input>
+                </div>
+                <div>
+                    <Label className="text-md">
+                        Content:
+                    </Label>
+                    <MinimalTiptapEditor
+                        value={value}
+                        onChange={setValue}
+                        className="w-full"
+                        editorContentClassName="p-5 bg-input/30"
+                        output="html"
+                        placeholder="Enter your description..."
+                        autofocus={true}
+                        editable={true}
+                        editorClassName="focus:outline-hidden"
+                    />
+                </div>
             </div>
         </div>
         :

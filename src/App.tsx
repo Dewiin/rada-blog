@@ -8,6 +8,7 @@ import { PageNotFoundScreen } from "./components/screens/PageNotFoundScreen";
 
 // Components
 import { Navbar } from "./components/navbar/navbar";
+import { TooltipProvider } from "./components/ui/tooltip";
 
 import { Routes, Route } from "react-router-dom";
 import './App.css'
@@ -15,7 +16,7 @@ import './App.css'
 function App() {
   
   return (
-    <>
+    <TooltipProvider>
       <Navbar />
       <Routes>
         <Route path="/" element={ <HomeScreen/> } />
@@ -25,7 +26,7 @@ function App() {
         <Route path="/create" element={ <CreatePostScreen /> } />
         <Route path="/*" element={ <PageNotFoundScreen /> } />
       </Routes>
-    </>
+    </TooltipProvider>
   )
 }
 
