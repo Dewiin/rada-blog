@@ -1,4 +1,5 @@
 import { useAuth } from "@/contexts/AuthContext"
+import { useUI } from "@/contexts/UIContext";
 
 // Components
 import { PageForbiddenScreen } from "./PageForbiddenScreen";
@@ -16,14 +17,62 @@ export function CreatePostScreen() {
     const [value, setValue] = useState<Content>("");
     const [title, setTitle] = useState<string>("");
     const { user } = useAuth();
+    const { isLoading, setIsLoading } = useUI();
 
     async function onSubmit() {
-        // toast.promise()
-        console.log(value);
+        setIsLoading(true);
+        await toast.promise(
+            async () => {
+                const data = {
+                    title,
+                    content: value,
+                    published: true,
+                    authorId: user?.id
+                };
+
+                const response = await fetch(`${VITE_API_URL}/api/posts`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                    credentials: "include",
+                });
+                const result = await response.json();
+
+                if(!response.ok) {
+                    toast.warning(result.error, {
+                        position: "top-center",
+                        description: "Please try again."
+                    });
+                } else {
+                    toast.success(result.message, {
+                        position: "top-center",
+                        description: "View the new post on the home page."
+                    })
+                }
+                setIsLoading(false);
+            }, {
+                position: "top-center",
+                loading: "Submitting post...",
+            }
+        );
     }
 
     async function onSave() {
-        console.log(title);
+        await toast.promise(
+            async () => {
+                const data = {
+                    title, 
+                    content: value,
+                    published: false,
+                    authorId: user?.id
+                };
+
+
+            }, {
+                position: "top-center",
+                loading: "Saving post...",
+            }
+        );
     }
 
     return (
@@ -65,6 +114,8 @@ export function CreatePostScreen() {
                     <Button 
                         className="w-fit cursor-pointer"
                         onClick={() => onSubmit()}
+                        disabled={isLoading}
+                        type="submit"
                     >
                         Submit
                     </Button>
@@ -72,6 +123,8 @@ export function CreatePostScreen() {
                         className="w-fit cursor-pointer"
                         variant={"secondary"}
                         onClick={() => onSave()}
+                        disabled={isLoading}
+                        type="submit"
                     >
                         Save
                     </Button>

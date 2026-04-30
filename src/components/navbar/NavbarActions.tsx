@@ -126,7 +126,7 @@ export function NavbarActions({
                         });
                     }
                 } else {
-                    if(result.message) toast.success(result.message, {
+                    toast.success(result.message, {
                         position: "top-center"
                     }); 
                     await checkToken();
@@ -156,7 +156,7 @@ export function NavbarActions({
                         position: "top-center",
                     });
                 } else {
-                    if(result.message) toast.success(result.message, {
+                    toast.success(result.message, {
                         position: "top-center"
                     }); 
                     await checkToken();
