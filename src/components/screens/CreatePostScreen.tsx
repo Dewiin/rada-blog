@@ -7,54 +7,43 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import type { Content } from "@tiptap/react"
 import { MinimalTiptapEditor } from "@/components/ui/minimal-tiptap"
+import { Button } from "../ui/button";
+import { toast } from "sonner";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 export function CreatePostScreen() {
-    const [ apiKey, setApiKey ] = useState<string | undefined>(undefined);
-    const [value, setValue] = useState<Content>("")
+    const [value, setValue] = useState<Content>("");
+    const [title, setTitle] = useState<string>("");
     const { user } = useAuth();
 
-    useEffect(() => {
-        async function getApiKey() {
-            try {
-                const response = await fetch(`${VITE_API_URL}/api/keys`, {
-                    method: "GET",
-                    credentials: "include",
-                });
+    async function onSubmit() {
+        // toast.promise()
+        console.log(value);
+    }
 
-                if(!response.ok) {
-                    console.error("Error fetching api key: ", response.status, response.statusText);
-                    return;
-                }
-                
-                const result = await response.json();
-                setApiKey(result.tiny_mce_api_key);
-            } catch (err: any) {
-                console.error("Error fetching api key: ", err);
-            }
-        }
-
-        if(apiKey === undefined) {
-            getApiKey();
-        }
-    }, [user, apiKey]);
+    async function onSave() {
+        console.log(title);
+    }
 
     return (
         <>
-        {apiKey && user && user.role === "AUTHOR" ? 
+        {user && user.role === "AUTHOR" ? 
         <div className="md:mx-40 md:my-24 my-12 m-6 flex flex-col gap-12">
             <Label className="text-5xl font-extrabold">
                 Create a Post
             </Label>
             <div
-                className="flex flex-col gap-4"
+                className="flex flex-col gap-6"
             >
                 <div>
                     <Label className="text-md">
                         Title:
                     </Label>
-                    <Input className="bg-input/30"></Input>
+                    <Input 
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="bg-input/30"
+                    />
                 </div>
                 <div>
                     <Label className="text-md">
@@ -71,6 +60,21 @@ export function CreatePostScreen() {
                         editable={true}
                         editorClassName="focus:outline-hidden"
                     />
+                </div>
+                <div className="flex gap-2">
+                    <Button 
+                        className="w-fit cursor-pointer"
+                        onClick={() => onSubmit()}
+                    >
+                        Submit
+                    </Button>
+                    <Button 
+                        className="w-fit cursor-pointer"
+                        variant={"secondary"}
+                        onClick={() => onSave()}
+                    >
+                        Save
+                    </Button>
                 </div>
             </div>
         </div>
