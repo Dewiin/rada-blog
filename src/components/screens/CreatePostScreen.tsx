@@ -21,58 +21,84 @@ export function CreatePostScreen() {
 
     async function onSubmit() {
         setIsLoading(true);
-        await toast.promise(
-            async () => {
-                const data = {
-                    title,
-                    content: value,
-                    published: true,
-                    authorId: user?.id
-                };
-
-                const response = await fetch(`${VITE_API_URL}/api/posts`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data),
-                    credentials: "include",
-                });
-                const result = await response.json();
-
-                if(!response.ok) {
-                    toast.warning(result.error, {
-                        position: "top-center",
-                        description: "Please try again."
+        try {
+            await toast.promise(
+                async () => {
+                    const data = {
+                        title,
+                        content: value,
+                        published: true,
+                        authorId: user?.id
+                    };
+    
+                    const response = await fetch(`${VITE_API_URL}/api/posts`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data),
+                        credentials: "include",
                     });
-                } else {
-                    toast.success(result.message, {
-                        position: "top-center",
-                        description: "View the new post on the home page."
-                    })
+                    const result = await response.json();
+    
+                    if(!response.ok) {
+                        toast.warning(result.error, {
+                            position: "top-center",
+                            description: "Please try again."
+                        });
+                    } else {
+                        toast.success(result.message, {
+                            position: "top-center",
+                            description: "View the new post on the home page."
+                        })
+                    }
+                }, {
+                    position: "top-center",
+                    loading: "Submitting post...",
                 }
-                setIsLoading(false);
-            }, {
-                position: "top-center",
-                loading: "Submitting post...",
-            }
-        );
+            );
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     async function onSave() {
-        await toast.promise(
-            async () => {
-                const data = {
-                    title, 
-                    content: value,
-                    published: false,
-                    authorId: user?.id
-                };
-
-
-            }, {
-                position: "top-center",
-                loading: "Saving post...",
-            }
-        );
+        setIsLoading(true);
+        try {
+            await toast.promise(
+                async () => {
+                    const data = {
+                        title,
+                        content: value,
+                        published: false,
+                        authorId: user?.id
+                    };
+    
+                    const response = await fetch(`${VITE_API_URL}/api/posts`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data),
+                        credentials: "include",
+                    });
+                    const result = await response.json();
+    
+                    if(!response.ok) {
+                        toast.warning(result.error, {
+                            position: "top-center",
+                            description: "Please try again."
+                        });
+                    } else {
+                        toast.success(result.message, {
+                            position: "top-center",
+                            description: "View saved posts in your profile."
+                        })
+                    }
+                }, {
+                    position: "top-center",
+                    loading: "Saving post...",
+                }
+            );
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
