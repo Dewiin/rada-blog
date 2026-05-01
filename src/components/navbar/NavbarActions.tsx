@@ -109,92 +109,102 @@ export function NavbarActions({
 
     async function onSignupSubmit(data: z.infer<typeof signupSchema>) {
         setIsLoading(true);
-        await toast.promise(
-            async () => {
-                const response = await fetch(`${VITE_API_URL}/api/auth/signup`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data),
-                    credentials: "include",
-                });
-                const result = await response.json();
-                if(!response.ok) {
-                    if(response.status === 409) {
-                        toast.warning(result.error, {
-                            position: "top-center",
-                            description: "Please try again with a different username."
-                        });
+        try {
+            await toast.promise(
+                async () => {
+                    const response = await fetch(`${VITE_API_URL}/api/auth/signup`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data),
+                        credentials: "include",
+                    });
+                    const result = await response.json();
+                    if(!response.ok) {
+                        if(response.status === 409) {
+                            toast.warning(result.error, {
+                                position: "top-center",
+                                description: "Please try again with a different username."
+                            });
+                        }
+                    } else {
+                        toast.success(result.message, {
+                            position: "top-center"
+                        }); 
+                        await checkToken();
                     }
-                } else {
-                    toast.success(result.message, {
-                        position: "top-center"
-                    }); 
-                    await checkToken();
+                }, {
+                    position: "top-center",
+                    loading: "Signing up...",
                 }
-                setIsLoading(false);
-            }, {
-                position: "top-center",
-                loading: "Signing up...",
-            }
-        );
+            );
+        } finally {
+            setIsLoading(false);
+        }
     }   
         
     async function onLoginSubmit(data: z.infer<typeof loginSchema>) {
         setIsLoading(true);
-        await toast.promise(
-            async() => {
-                const response = await fetch(`${VITE_API_URL}/api/auth/login`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data),
-                    credentials: "include",
-                });
-                const result = await response.json();
-    
-                if(!response.ok) {
-                    toast.warning(result.error, {
-                        position: "top-center",
+        try {
+            await toast.promise(
+                async() => {
+                    const response = await fetch(`${VITE_API_URL}/api/auth/login`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data),
+                        credentials: "include",
                     });
-                } else {
-                    toast.success(result.message, {
-                        position: "top-center"
-                    }); 
-                    await checkToken();
+                    const result = await response.json();
+        
+                    if(!response.ok) {
+                        toast.warning(result.error, {
+                            position: "top-center",
+                        });
+                    } else {
+                        toast.success(result.message, {
+                            position: "top-center"
+                        }); 
+                        await checkToken();
+                    }
+                }, {
+                    position: "top-center",
+                    loading: "Logging in..."
                 }
-                setIsLoading(false);
-            }, {
-                position: "top-center",
-                loading: "Logging in..."
-            }
-        );
+            );
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     async function onLogoutSubmit() {
         setIsLoading(true);
-        await toast.promise(
-            async () => {
-                const response = await fetch(`${VITE_API_URL}/api/auth/logout`, {
-                    method: "GET",
-                    credentials: "include",
-                });
-                const result = await response.json();
-    
-                if(!response.ok) {
-                    toast.warning(result.error, {
-                        position: "top-center",
+        try {
+            await toast.promise(
+                async () => {
+                    const response = await fetch(`${VITE_API_URL}/api/auth/logout`, {
+                        method: "GET",
+                        credentials: "include",
                     });
-                } else {
-                    setUser(null);
-                    if(result.message) toast.success(result.message, {
-                        position: "top-center"
-                    }); 
+                    const result = await response.json();
+        
+                    if(!response.ok) {
+                        toast.warning(result.error, {
+                            position: "top-center",
+                        });
+                    } else {
+                        setUser(null);
+                        if(result.message) toast.success(result.message, {
+                            position: "top-center"
+                        }); 
+                    }
+                }, {
+                    position: "top-center",
+                    loading: "Logging out..."
                 }
-                setIsLoading(false);
-            }, {
-                position: "top-center",
-                loading: "Logging out..."
-            }
-        );
+            );
+        } finally {
+            setIsLoading(false);
+            navigate("/");
+        }
     }
 
     return (
