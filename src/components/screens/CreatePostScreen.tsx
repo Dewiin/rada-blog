@@ -16,7 +16,7 @@ const VITE_API_URL = import.meta.env.VITE_API_URL;
 export function CreatePostScreen() {
     const [value, setValue] = useState<Content>("");
     const [title, setTitle] = useState<string>("");
-    const { user } = useAuth();
+    const { user, refreshToken } = useAuth();
     const { isLoading, setIsLoading } = useUI();
 
     async function onSubmit() {
@@ -31,12 +31,23 @@ export function CreatePostScreen() {
                         authorId: user?.id
                     };
     
-                    const response = await fetch(`${VITE_API_URL}/api/posts`, {
+                    let response = await fetch(`${VITE_API_URL}/api/posts`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(data),
                         credentials: "include",
                     });
+
+                    if(response.status === 401) {
+                        console.log("refreshing");
+                        await refreshToken();
+                        response = await fetch(`${VITE_API_URL}/api/posts`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(data),
+                            credentials: "include",
+                        });
+                    }
                     const result = await response.json();
     
                     if(!response.ok) {
@@ -72,12 +83,22 @@ export function CreatePostScreen() {
                         authorId: user?.id
                     };
     
-                    const response = await fetch(`${VITE_API_URL}/api/posts`, {
+                    let response = await fetch(`${VITE_API_URL}/api/posts`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(data),
                         credentials: "include",
                     });
+                    if(response.status === 401) {
+                        console.log("refreshing");
+                        await refreshToken();
+                        response = await fetch(`${VITE_API_URL}/api/posts`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(data),
+                            credentials: "include",
+                        });
+                    }
                     const result = await response.json();
     
                     if(!response.ok) {
@@ -89,7 +110,7 @@ export function CreatePostScreen() {
                         toast.success(result.message, {
                             position: "top-center",
                             description: "View saved posts in your profile."
-                        })
+                        });
                     }
                 }, {
                     position: "top-center",

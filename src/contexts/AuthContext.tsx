@@ -11,12 +11,14 @@ type AuthContextProps = {
     user: User | null,
     setUser: (user: User | null) => void, 
     checkToken: () => Promise<void>,
+    refreshToken: () => Promise<void>,
 }
 
 const AuthContext = createContext<AuthContextProps>({
     user: null,
     setUser: () => {},
     checkToken: async () => {},
+    refreshToken: async () => {},
 });
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -28,12 +30,20 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
     async function checkToken() {
         try {  
-            const response = await fetch(`${VITE_API_URL}/api/auth/verifyToken`, {
-                method: "GET",
+            let response = await fetch(`${VITE_API_URL}/api/auth/verifyToken`, {
+                method: "POST",
                 credentials: "include"
             });
-            const result = await response.json();
+            
+            if(response.status === 401) {
+                await refreshToken();
+                response = await fetch(`${VITE_API_URL}/api/auth/verifyToken`, {
+                    method: "POST",
+                    credentials: "include"
+                });
+            }
 
+            const result = await response.json();
             if(!response.ok) {
                 if(result.error) console.error(result.error);
                 else console.error(`Error: ${response.status} ${response.statusText}`);
@@ -45,11 +55,23 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
             setUser(null);
         }
     }
+
+    async function refreshToken() {
+        try {
+            await fetch(`${VITE_API_URL}/api/auth/refresh`, {
+                method: "POST",
+                credentials: "include"
+            });
+        } catch (err: any) {
+            console.error(`Error in refreshToken: ${err.message}, ${err.stack}`);
+        }
+    }
     
     const values = {
         user,
         setUser,
         checkToken,
+        refreshToken
     }
 
     return (

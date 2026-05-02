@@ -139,6 +139,7 @@ export function NavbarActions({
             );
         } finally {
             setIsLoading(false);
+            navigate("/");
         }
     }   
         
@@ -172,6 +173,7 @@ export function NavbarActions({
             );
         } finally {
             setIsLoading(false);
+            navigate("/");
         }
     }
 
@@ -181,7 +183,7 @@ export function NavbarActions({
             await toast.promise(
                 async () => {
                     const response = await fetch(`${VITE_API_URL}/api/auth/logout`, {
-                        method: "GET",
+                        method: "POST",
                         credentials: "include",
                     });
                     const result = await response.json();
