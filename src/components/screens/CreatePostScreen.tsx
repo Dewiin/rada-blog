@@ -9,13 +9,19 @@ import { Input } from "@/components/ui/input";
 import type { Content } from "@tiptap/react"
 import { MinimalTiptapEditor } from "@/components/ui/minimal-tiptap"
 import { Button } from "../ui/button";
+import { 
+    Field,
+    FieldDescription,
+    FieldLabel 
+} from "../ui/field";
 import { toast } from "sonner";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 export function CreatePostScreen() {
-    const [value, setValue] = useState<Content>("");
     const [title, setTitle] = useState<string>("");
+    const [subtitle, setSubtitle] = useState<string>("");
+    const [value, setValue] = useState<Content>("");
     const { user, refreshToken } = useAuth();
     const { isLoading, setIsLoading } = useUI();
 
@@ -26,6 +32,7 @@ export function CreatePostScreen() {
                 async () => {
                     const data = {
                         title,
+                        subtitle,
                         content: value,
                         published: true,
                         authorId: user?.id
@@ -78,6 +85,7 @@ export function CreatePostScreen() {
                 async () => {
                     const data = {
                         title,
+                        subtitle,
                         content: value,
                         published: false,
                         authorId: user?.id
@@ -132,19 +140,23 @@ export function CreatePostScreen() {
             <div
                 className="flex flex-col gap-6"
             >
-                <div>
-                    <Label className="text-md">
-                        Title:
-                    </Label>
+                <Field 
+                    className="flex flex-col gap-1"
+                >
                     <Input 
                         onChange={(e) => setTitle(e.target.value)}
-                        className="bg-input/30"
+                        className="bg-input/30 font-extrabold"
+                        placeholder="My Title"
+                        aria-invalid={title.length === 0}
                     />
-                </div>
+                    <Input 
+                        onChange={(e) => setSubtitle(e.target.value)}
+                        className="bg-input/30"
+                        placeholder="Write a preview subtitle..."
+                        aria-invalid={subtitle.length === 0}
+                    />
+                </Field>
                 <div>
-                    <Label className="text-md">
-                        Content:
-                    </Label>
                     <MinimalTiptapEditor
                         value={value}
                         onChange={setValue}
