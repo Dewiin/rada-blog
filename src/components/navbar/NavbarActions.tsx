@@ -421,7 +421,7 @@ export function NavbarActions({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button className="relative h-10 w-10 rounded-sm" variant="ghost">
-                      <Avatar size="sm">
+                      <Avatar size="default">
                         <AvatarImage alt={`@${user.username}`} />
                         <AvatarFallback>{user.username.substring(0,2)}</AvatarFallback>
                       </Avatar>
