@@ -11,8 +11,6 @@ import { MinimalTiptapEditor } from "@/components/ui/minimal-tiptap"
 import { Button } from "../ui/button";
 import { 
     Field,
-    FieldDescription,
-    FieldLabel 
 } from "../ui/field";
 import { toast } from "sonner";
 

@@ -1,14 +1,34 @@
-import { format } from "date-fns"
 import DOMPurify from "dompurify"
+import { format, formatDistanceToNowStrict, differenceInDays, isThisYear } from "date-fns"
+import { useNavigate } from "react-router"
+
+// types
 import type { IPost } from "../types/Post"
+
+// components
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar"
 
 export function PostPreview({ post }: { post: IPost }) {
+    const navigate = useNavigate();
+
+    function formatPostDate(date: Date) {
+        const daysAgo = differenceInDays(new Date(), date);
+
+        if (daysAgo <= 7) {
+            return formatDistanceToNowStrict(date, { addSuffix: true });
+        }
+
+        if (isThisYear(date)) {
+            return format(date, "MMM dd");
+        }
+
+        return format(date, "MMM dd, yyyy");
+    }
+
     return (
         <div 
-            className="flex flex-col gap-3 
-            m-4
-            h-fit"
+            className="flex flex-col gap-3 m-4 h-fit cursor-pointer"
+            onClick={() => navigate(`/post/${post.id}`)}
         >   
             {/* author */}
             <div 
@@ -44,7 +64,7 @@ export function PostPreview({ post }: { post: IPost }) {
                 }}
             />
             <div>
-                {format(post.createdAt, "MMM dd, yyyy")}
+                {formatPostDate(post.createdAt)}
             </div>
         </div>
     )

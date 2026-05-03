@@ -1,6 +1,6 @@
 // Screens
 import { HomeScreen } from "./components/screens/HomeScreen";
-import { BlogScreen } from "./components/screens/BlogScreen";
+import { PostScreen } from "./components/screens/PostScreen";
 import { AccountProfileScreen } from "./components/screens/AccountProfileScreen";
 import { AccountSettingsScreen } from "./components/screens/AccountSettingsScreen";
 import { CreatePostScreen } from "./components/screens/CreatePostScreen";
@@ -20,7 +20,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={ <HomeScreen/> } />
-        <Route path="/blog/:id" element={ <BlogScreen /> } />
+        <Route path="/post/:id" element={ <PostScreen /> } />
         <Route path="/profile/:userId" element={ <AccountProfileScreen /> } />
         <Route path="/settings/:userId" element={ <AccountSettingsScreen /> } />
         <Route path="/create" element={ <CreatePostScreen /> } />
