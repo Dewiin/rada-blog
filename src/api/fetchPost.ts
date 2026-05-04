@@ -1,8 +1,10 @@
 export async function fetchPost(
     id: string,
     setError: Function,
-    setPost: Function
+    setPost: Function,
+    setIsLoading: Function
 ) {
+    setIsLoading(true);
     try {
         const VITE_API_URL = import.meta.env.VITE_API_URL;
         const response = await fetch(`${VITE_API_URL}/api/posts/${id}`, {
@@ -24,5 +26,7 @@ export async function fetchPost(
             title: "Server error",
             description: "Please try again later."
         });
+    } finally {
+        setIsLoading(false);
     }
 }
