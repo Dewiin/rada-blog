@@ -5,29 +5,21 @@ import { fetchAllPosts } from "@/api/fetchAllPosts";
 
 // types
 import type { IPost } from "../types/Post";
-import type { IError } from "../types/Error";
 
 // components
 import { PostPreview } from "../postPreview/PostPreview";
-import { toast } from "sonner";
 import { Separator } from "../ui/separator";
+
+// contexts
+import { useUI } from "@/contexts/UIContext";
 
 export function HomeScreen() {
     const [ posts, setPosts ] = useState<IPost[]>([]);
-    const [ error, setError ] = useState<IError>();
-    
-    useEffect(() => {
-        if(error) {
-            toast.warning(error?.title, {
-                description: error?.description
-            });
-        }
-    }, [error]);
+    const { setError } = useUI();
 
     useEffect(() => {
         fetchAllPosts(setPosts, setError);
     }, []);
-
 
     return (
         <div
@@ -35,13 +27,13 @@ export function HomeScreen() {
             my-20 md:mx-auto mx-8
             md:w-2xl"
         >
-            { posts.length > 0 && posts.map((post, _) => (
+            { posts.length > 0 && posts.map((post, index) => (
                 <>
                     <PostPreview
-                        key={_}
+                        key={index}
                         post={post} 
                     />
-                    {_ < posts.length-1 && <Separator />}
+                    {index < posts.length-1 && <Separator />}
                 </>
             ))}
         </div>

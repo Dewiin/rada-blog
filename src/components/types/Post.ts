@@ -8,6 +8,7 @@ export type IPost = {
     createdAt: Date,
     updatedAt: Date, 
     published: boolean, 
+    claps: number,
     author: {
         id: string,
         username: string
