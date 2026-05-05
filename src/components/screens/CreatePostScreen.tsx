@@ -1,10 +1,15 @@
-import { useAuth } from "@/contexts/AuthContext"
-import { useUI } from "@/contexts/UIContext";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 
-// Components
+// schemas
+import { formSchema } from "@/zodSchemas/post";
+
+// contexts
+import { useAuth } from "@/contexts/AuthContext"
+import { useUI } from "@/contexts/UIContext";
+
+// components
 import { PageForbiddenScreen } from "./PageForbiddenScreen";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -18,20 +23,6 @@ import {
 import { toast } from "sonner";
 
 const VITE_API_URL = import.meta.env.VITE_API_URL;
-
-const formSchema = z.object({
-    title: z
-        .string()
-        .min(10, "Title must be at least 10 characters.")
-        .max(100, "Title must be at most 100 characters."),
-    subtitle: z
-        .string()
-        .min(10, "Subtitle must be at least 10 characters.")
-        .max(100, "Description must be at most 100 characters."),
-    content: z
-        .string()
-        .min(100, "Content is too short!")
-});
 
 export function CreatePostScreen() {
     const { user, refreshToken } = useAuth();

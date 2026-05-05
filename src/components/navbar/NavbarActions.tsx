@@ -2,11 +2,19 @@ import { useState } from "react"
 import { useNavigate } from "react-router"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useAuth } from "@/contexts/AuthContext"
-import { useUI } from "@/contexts/UIContext"
 import z from "zod"
 
-// Components
+// schemas
+import { signupSchema, loginSchema } from "@/zodSchemas/auth"
+
+// contexts
+import { useAuth } from "@/contexts/AuthContext"
+import { useUI } from "@/contexts/UIContext"
+
+// api
+import { signup, login, logout } from "@/api/auth"
+
+// components
 import { Button, GoogleSVG } from "@/components/ui/button"
 import {
   Dialog,
@@ -38,55 +46,19 @@ import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
 import { User, Settings, LogOut, Newspaper } from "lucide-react"
 
-// API
-const VITE_API_URL = import.meta.env.VITE_API_URL;
-
-// Username and passphrase parameters
-const USER_LEN_MINIMUM = 6
-const USER_LEN_MAXIMUM = 20
-const PASS_LEN_MINIMUM = 10
-const PASS_LEN_MAXIMUM = 512
-const PRINTABLE_UNICODE = /^[\P{Cc}\P{Cn}\P{Cs}]+$/gu // allow only, printable (unicode) characters; https://stackoverflow.com/a/12054775
-const PRINTABLE_MESSAGE = "can only contain printable characters."
-
-const signupSchema = z.object({
-    username: z.string().min(USER_LEN_MINIMUM, {
-        message: "Username must be at least " + USER_LEN_MINIMUM + " characters.",
-    }).max(USER_LEN_MAXIMUM, {
-        message: "Username has a " + USER_LEN_MAXIMUM + " character limit."
-    }).regex(PRINTABLE_UNICODE, { 
-        message: "Username " + PRINTABLE_MESSAGE
-    }),
-    password: z.string().min(PASS_LEN_MINIMUM, {
-        message: "Password must be at least " + PASS_LEN_MINIMUM + " characters."
-    }). max(PASS_LEN_MAXIMUM, {
-        message: "Password has a " + PASS_LEN_MAXIMUM + " character limit."
-    }).regex(PRINTABLE_UNICODE, { 
-        message: "Password " + PRINTABLE_MESSAGE
-    }),
-    confirmPassword: z.string(),
-    }).refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match.",
-    path: ["confirmPassword"]
-});
-
-const loginSchema = z.object({
-    username: z.string(),
-    password: z.string(),
-});
-
 type AuthProps = {
     signInText?: string
     ctaText?: string
 }
 type AuthModes = "login" | "signup"
+
 export function NavbarActions({
     signInText,
     ctaText,
 }: AuthProps) {
     const [mode, setMode] = useState<AuthModes>("signup");
     const { user, setUser, checkToken } = useAuth();
-    const { setIsLoading } = useUI();
+    const { setIsLoading, setSuccess, setError } = useUI();
     const navigate = useNavigate();
 
     const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -108,105 +80,15 @@ export function NavbarActions({
     });
 
     async function onSignupSubmit(data: z.infer<typeof signupSchema>) {
-        setIsLoading(true);
-        try {
-            await toast.promise(
-                async () => {
-                    const response = await fetch(`${VITE_API_URL}/api/auth/signup`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(data),
-                        credentials: "include",
-                    });
-                    const result = await response.json();
-                    if(!response.ok) {
-                        if(response.status === 409) {
-                            toast.warning(result.error, {
-                                position: "top-center",
-                                description: "Please try again with a different username."
-                            });
-                        }
-                    } else {
-                        toast.success(result.message, {
-                            position: "top-center"
-                        }); 
-                        await checkToken();
-                    }
-                }, {
-                    position: "top-center",
-                    loading: "Signing up...",
-                }
-            );
-        } finally {
-            setIsLoading(false);
-            navigate("/");
-        }
+        await toast.promise(signup(data, setIsLoading, setError, setSuccess, checkToken));    
     }   
         
     async function onLoginSubmit(data: z.infer<typeof loginSchema>) {
-        setIsLoading(true);
-        try {
-            await toast.promise(
-                async() => {
-                    const response = await fetch(`${VITE_API_URL}/api/auth/login`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(data),
-                        credentials: "include",
-                    });
-                    const result = await response.json();
-        
-                    if(!response.ok) {
-                        toast.warning(result.error, {
-                            position: "top-center",
-                        });
-                    } else {
-                        toast.success(result.message, {
-                            position: "top-center"
-                        }); 
-                        await checkToken();
-                    }
-                }, {
-                    position: "top-center",
-                    loading: "Logging in..."
-                }
-            );
-        } finally {
-            setIsLoading(false);
-            navigate("/");
-        }
+        await toast.promise(login(data, setIsLoading, setError, setSuccess, checkToken));
     }
 
     async function onLogoutSubmit() {
-        setIsLoading(true);
-        try {
-            await toast.promise(
-                async () => {
-                    const response = await fetch(`${VITE_API_URL}/api/auth/logout`, {
-                        method: "POST",
-                        credentials: "include",
-                    });
-                    const result = await response.json();
-        
-                    if(!response.ok) {
-                        toast.warning(result.error, {
-                            position: "top-center",
-                        });
-                    } else {
-                        setUser(null);
-                        if(result.message) toast.success(result.message, {
-                            position: "top-center"
-                        }); 
-                    }
-                }, {
-                    position: "top-center",
-                    loading: "Logging out..."
-                }
-            );
-        } finally {
-            setIsLoading(false);
-            navigate("/");
-        }
+        await toast.promise(logout(setIsLoading, setUser, setError, setSuccess));
     }
 
     return (

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import DOMPurify from "dompurify";
 
 // helpers
-import { fetchPost } from "@/api/fetchPost";
+import { fetchPost } from "@/api/posts";
 import { formatDate } from "@/helpers/formatDate";
 
 // types

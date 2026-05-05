@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 // api
-import { fetchAllPosts } from "@/api/fetchAllPosts";
+import { fetchAllPosts } from "@/api/posts";
 
 // types
 import type { IPost } from "../types/Post";
