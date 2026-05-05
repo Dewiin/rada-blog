@@ -80,15 +80,24 @@ export function NavbarActions({
     });
 
     async function onSignupSubmit(data: z.infer<typeof signupSchema>) {
-        await toast.promise(signup(data, setIsLoading, setError, setSuccess, checkToken));    
+        await toast.promise(
+            signup(data, setIsLoading, setError, setSuccess, checkToken),
+            { loading: "Signing up..." }
+        );    
     }   
         
     async function onLoginSubmit(data: z.infer<typeof loginSchema>) {
-        await toast.promise(login(data, setIsLoading, setError, setSuccess, checkToken));
+        await toast.promise(
+            login(data, setIsLoading, setError, setSuccess, checkToken),
+            { loading: "Logging in..." }
+        );
     }
 
     async function onLogoutSubmit() {
-        await toast.promise(logout(setIsLoading, setUser, setError, setSuccess));
+        await toast.promise(
+            logout(setIsLoading, setUser, setError, setSuccess),
+            { loading: "Logging out..." }
+        );
     }
 
     return (

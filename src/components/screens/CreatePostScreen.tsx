@@ -2,6 +2,9 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 
+// api
+import { createPost, savePost } from "@/api/posts";
+
 // schemas
 import { formSchema } from "@/zodSchemas/post";
 
@@ -22,11 +25,9 @@ import {
 } from "../ui/field";
 import { toast } from "sonner";
 
-const VITE_API_URL = import.meta.env.VITE_API_URL;
-
 export function CreatePostScreen() {
     const { user, refreshToken } = useAuth();
-    const { isLoading, setIsLoading } = useUI();
+    const { isLoading, setIsLoading, setError, setSuccess } = useUI();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -39,104 +40,11 @@ export function CreatePostScreen() {
     })
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
-        await toast.promise(
-            async () => {
-                try {
-                    setIsLoading(true);
-                    const body = {
-                        ...data,
-                        published: true,
-                        authorId: user?.id
-                    };
-                    
-                    let response = await fetch(`${VITE_API_URL}/api/posts`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(body),
-                        credentials: "include",
-                    });
-                    
-                    if(response.status === 401) {
-                        console.log("refreshing");
-                        await refreshToken();
-                        response = await fetch(`${VITE_API_URL}/api/posts`, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(body),
-                            credentials: "include",
-                        });
-                    }
-                    const result = await response.json();
-                    
-                    if(!response.ok) {
-                        toast.warning(result.error, {
-                            position: "top-center",
-                            description: "Please try again."
-                        });
-                    } else {
-                        toast.success(result.message, {
-                            position: "top-center",
-                            description: "View the new post on the home page."
-                        })
-                    }
-                } finally {
-                    setIsLoading(false);
-                }
-            }, {
-                position: "top-center",
-                loading: "Submitting post...",
-            }
-        );
+        await toast.promise(createPost(data, setIsLoading, refreshToken, setError, setSuccess, user) , { loading: "Submitting post..." });
     }
 
     async function onSave(data: z.infer<typeof formSchema>) {
-        await toast.promise(
-            async () => {
-                try {
-                    setIsLoading(true);
-                    const body = {
-                        ...data,
-                        published: false,
-                        authorId: user?.id
-                    };
-                    
-                    let response = await fetch(`${VITE_API_URL}/api/posts`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(body),
-                        credentials: "include",
-                    });
-                    if(response.status === 401) {
-                        console.log("refreshing");
-                        await refreshToken();
-                        response = await fetch(`${VITE_API_URL}/api/posts`, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(body),
-                            credentials: "include",
-                        });
-                    }
-                    const result = await response.json();
-                    
-                    if(!response.ok) {
-                        toast.warning(result.error, {
-                            position: "top-center",
-                            description: "Please try again."
-                        });
-                    } else {
-                        toast.success(result.message, {
-                            position: "top-center",
-                            description: "View saved posts in your profile."
-                        });
-                    }
-                } finally {
-                    setIsLoading(false);
-                }
-            }, {
-                position: "top-center",
-                loading: "Saving post...",
-            }
-        );
+        await toast.promise(savePost(data, setIsLoading, refreshToken, setError, setSuccess, user), { loading: "Saving post..." });
     }
 
     return (

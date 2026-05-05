@@ -1,15 +1,13 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+
+// types
+import type { IUser } from '@/components/types/User';
+
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
-type User = {
-    id: string,
-    username: string,
-    role: string
-}
-
 type AuthContextProps = {
-    user: User | null,
-    setUser: (user: User | null) => void, 
+    user: IUser | null,
+    setUser: (user: IUser | null) => void, 
     checkToken: () => Promise<void>,
     refreshToken: () => Promise<void>,
 }
@@ -22,7 +20,7 @@ const AuthContext = createContext<AuthContextProps>({
 });
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<User|null>(null);
+    const [user, setUser] = useState<IUser|null>(null);
     
     useEffect(() => {
         checkToken();
