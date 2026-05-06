@@ -53,7 +53,7 @@ export function NavbarActions({
 }: AuthProps) {
     const [mode, setMode] = useState<AuthModes>("signup");
     const { user, setUser, checkToken } = useAuth();
-    const { setIsLoading, setSuccess, setError } = useUI();
+    const { isLoading, setIsLoading, setSuccess, setError } = useUI();
     const navigate = useNavigate();
 
     const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -194,7 +194,7 @@ export function NavbarActions({
                                     />
                                 </FieldGroup>
 
-                                <Button className="w-full">Create Account</Button>
+                                <Button className="w-full" type="submit" disabled={isLoading}>Create Account</Button>
 
                                 <div className="relative flex items-center gap-2">
                                     <Separator className="flex-1" />
@@ -203,7 +203,7 @@ export function NavbarActions({
                                     </span>
                                     <Separator className="flex-1" />
                                 </div>
-                                <Button className="w-full" variant="outline" type="button">
+                                <Button className="w-full" variant="outline" type="button" disabled={isLoading}>
                                     <GoogleSVG />
                                     Continue with Google
                                 </Button>
@@ -211,8 +211,10 @@ export function NavbarActions({
                             <DialogFooter className="sm:justify-center">
                                 <p className="text-muted-foreground text-sm">
                                     Already have an account?{" "}
-                                    <button className="font-medium underline cursor-pointer" type="button"
-                                    onClick={() => setMode("login")}
+                                    <button 
+                                        className="font-medium underline cursor-pointer" 
+                                        type="button"
+                                        onClick={() => setMode("login")}
                                     >
                                         Sign in
                                     </button>
@@ -275,7 +277,7 @@ export function NavbarActions({
                                     />
                                 </FieldGroup>
 
-                                <Button className="w-full">Log In</Button>
+                                <Button className="w-full" type="submit" disabled={isLoading}>Log In</Button>
 
                                 <div className="relative flex items-center gap-2">
                                     <Separator className="flex-1" />
@@ -284,7 +286,7 @@ export function NavbarActions({
                                     </span>
                                     <Separator className="flex-1" />
                                 </div>
-                                <Button className="w-full" variant="outline" type="button">
+                                <Button className="w-full" variant="outline" type="button" disabled={isLoading}>
                                     <GoogleSVG />
                                     Continue with Google
                                 </Button>
@@ -292,8 +294,10 @@ export function NavbarActions({
                             <DialogFooter className="sm:justify-center">
                                 <p className="text-muted-foreground text-sm">
                                     Don't have an account?{" "}
-                                    <button className="font-medium underline cursor-pointer" type="button"
-                                    onClick={() => setMode("signup")}
+                                    <button 
+                                        className="font-medium underline cursor-pointer" 
+                                        type="button"
+                                        onClick={() => setMode("signup")}
                                     >
                                         Sign Up
                                     </button>
