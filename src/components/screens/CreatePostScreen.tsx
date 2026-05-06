@@ -18,11 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { MinimalTiptapEditor } from "@/components/ui/minimal-tiptap"
 import { Button } from "../ui/button";
-import { 
-    Field,
-    FieldGroup,
-    FieldError,
-} from "../ui/field";
+import { Field, FieldGroup, FieldError } from "../ui/field";
 import { toast } from "sonner";
 
 export function CreatePostScreen() {
