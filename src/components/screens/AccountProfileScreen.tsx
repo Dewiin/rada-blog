@@ -28,11 +28,6 @@ export function AccountProfileScreen() {
         fetchAllUnpublishedPosts(setUnpublishedPosts, setError, setIsLoading, refreshToken);
     }, []);
 
-    useEffect(() => {
-        console.log(publishedPosts);
-        console.log(unpublishedPosts);
-    }, [publishedPosts, unpublishedPosts]);
-
     return (
         <>
             {user ? (
@@ -66,29 +61,33 @@ export function AccountProfileScreen() {
                                     <p className="text-center text-sm">You have no published posts.</p> 
                                 }
                                 { !isLoading && publishedPosts.length > 0 && publishedPosts.map((publishedPost, index) => (
-                                    <>
+                                    <div
+                                        key={publishedPost.id}
+                                        className="flex flex-col gap-4"
+                                    >
                                         <PostPreview 
-                                            key={index}
                                             post={publishedPost} 
                                         />
                                         {index < publishedPosts.length-1 && <Separator />}
-                                    </>
+                                    </div>
                                 ))}
                             </div>
                         </TabsContent>
                         
-                        <TabsContent value="unpublished" className="flex flex-col">
+                        <TabsContent value="unpublished" className="flex flex-col gap-4">
                             { unpublishedPosts.length === 0 && 
                                 <p className="text-center text-sm">You have no unpublished posts.</p> 
                             }
                             { !isLoading && unpublishedPosts.length > 0 && unpublishedPosts.map((unpublishedPost, index) => (
-                                <>
+                                <div
+                                    key={unpublishedPost.id}
+                                    className="flex flex-col gap-4"
+                                >
                                     <PostPreview 
-                                        key={index}
                                         post={unpublishedPost} 
                                     />
                                     {index < unpublishedPosts.length-1 && <Separator />}
-                                </>
+                                </div>
                             ))}   
                         </TabsContent>
 
