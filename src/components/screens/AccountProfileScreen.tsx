@@ -10,6 +10,7 @@ import { useUI } from "@/contexts/UIContext";
 // components
 import { PageUnauthorizedScreen } from "./PageUnauthorizedScreen";
 import { PostPreview } from "@/components/postPreview/PostPreview";
+import { SkeletonPostPreview } from "@/components/skeleton/SkeletonPostPreview";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator";
@@ -57,7 +58,10 @@ export function AccountProfileScreen() {
                             <div
                                 className="flex flex-col gap-4"
                             >
-                                { publishedPosts.length === 0 && 
+                                { isLoading && 
+                                    <SkeletonPostPreview />
+                                }
+                                { !isLoading && publishedPosts.length === 0 && 
                                     <p className="text-center text-sm">You have no published posts.</p> 
                                 }
                                 { !isLoading && publishedPosts.length > 0 && publishedPosts.map((publishedPost, index) => (
@@ -75,7 +79,10 @@ export function AccountProfileScreen() {
                         </TabsContent>
                         
                         <TabsContent value="unpublished" className="flex flex-col gap-4">
-                            { unpublishedPosts.length === 0 && 
+                            { isLoading && 
+                                <SkeletonPostPreview />
+                            }
+                            { !isLoading && unpublishedPosts.length === 0 && 
                                 <p className="text-center text-sm">You have no unpublished posts.</p> 
                             }
                             { !isLoading && unpublishedPosts.length > 0 && unpublishedPosts.map((unpublishedPost, index) => (
