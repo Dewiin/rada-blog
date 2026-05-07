@@ -1,4 +1,4 @@
-const VITE_API_URL = import.meta.env.VITE_API_URL;
+import { api } from "./client";
 
 export async function fetchAllPublishedPosts(
     setPosts: Function,
@@ -8,29 +8,11 @@ export async function fetchAllPublishedPosts(
 ) {
     setIsLoading(true);
     try {
-        let response = await fetch(`${VITE_API_URL}/api/profile/published`, {
-            method: "GET",
-            credentials: "include",
-        });
-
-        if(response.status === 401) {
-            console.log("refreshing");
-            await refreshToken();
-            response = await fetch(`${VITE_API_URL}/api/profile/published`, {
-                method: "GET",
-                credentials: "include",
-            });
-        }
+        const data = await api('/api/profile/published', {
+            method: "GET"
+        }, refreshToken, setError);
         
-        const result = await response.json();
-        if(!response.ok) {
-            setError({
-                title: "Error getting a response.",
-                description: "Please try again later."
-            });
-            return;
-        } 
-        setPosts(result.posts);
+        setPosts(data?.posts || []);
     } catch (err: any) {
         setError({
             title: "Server error",
@@ -49,29 +31,11 @@ export async function fetchAllUnpublishedPosts(
 ) {
     setIsLoading(true);
     try {
-        let response = await fetch(`${VITE_API_URL}/api/profile/unpublished`, {
-            method: "GET",
-            credentials: "include",
-        });
-
-        if(response.status === 401) {
-            console.log("refreshing");
-            await refreshToken();
-            response = await fetch(`${VITE_API_URL}/api/profile/unpublished`, {
-                method: "GET",
-                credentials: "include",
-            });
-        }
-
-        const result = await response.json();
-        if(!response.ok) {
-            setError({
-                title: "Error getting a response.",
-                description: "Please try again later."
-            });
-            return;
-        } 
-        setPosts(result.posts);
+        const data = await api('/api/profile/unpublished', {
+            method: "GET"
+        }, refreshToken, setError);
+        
+        setPosts(data?.posts || []);
     } catch (err: any) {
         setError({
             title: "Server error",
