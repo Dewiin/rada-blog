@@ -32,8 +32,10 @@ export function PostScreen() {
         if(id) fetchPost(id, setError, setPost, setIsLoading);
     }, []);
 
-    if( !post?.published && (post?.author.id !== user?.id)) {
-        return <PageForbiddenScreen />
+    if (!isLoading && post) {
+        if (!post.published && post.author.id !== user?.id) {
+            return <PageForbiddenScreen />
+        }
     }
 
     return (
@@ -82,7 +84,7 @@ export function PostScreen() {
                                 <div className="flex gap-8 mx-2">
                                     <div className="flex items-center gap-2">
                                         <PiHandsClappingLight />
-                                        {post?.claps}
+                                        {post?.claps.length}
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <FaRegComment />

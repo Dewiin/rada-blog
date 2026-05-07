@@ -62,7 +62,7 @@ export function PostPreview({ post }: { post: IPost }) {
                 {/* claps/upvotes */}
                 <div className="flex items-center gap-2 dark:text-stone-500 text-stone-600">
                     <PiHandsClappingFill />
-                    {post.claps}
+                    {post.claps.length}
                 </div>
 
                 {/* comments */}
