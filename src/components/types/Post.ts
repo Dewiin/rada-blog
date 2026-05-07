@@ -1,4 +1,6 @@
 import type { IComment } from "./Comment";
+import type { IUser } from "./User";
+import type { IClap } from "./Clap";
 
 export type IPost = {
     id: number,
@@ -8,10 +10,7 @@ export type IPost = {
     createdAt: Date,
     updatedAt: Date, 
     published: boolean, 
-    claps: number,
-    author: {
-        id: string,
-        username: string
-    }
+    claps: IClap[],
+    author: IUser
     comments: IComment[]
 };
