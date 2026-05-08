@@ -28,9 +28,10 @@ export function HomeScreen() {
             my-20 md:mx-auto mx-8
             md:w-2xl"
         >
-            { isLoading && 
-                // skeleton preview
-                <SkeletonPostPreview />
+            { isLoading && Array.from({length: 3}).map((_, index) => (
+                    // skeleton preview
+                    <SkeletonPostPreview key={index} />
+                ))
             }
             { !isLoading && posts.length > 0 && posts.map((post, index) => (
                 <div
