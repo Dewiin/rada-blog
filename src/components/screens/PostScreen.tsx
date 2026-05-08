@@ -25,11 +25,11 @@ export function PostScreen() {
     const { id } = useParams();
     const [ post, setPost ] = useState<IPost | null>(null);
     const { setError, isLoading, setIsLoading } = useUI();
-    const { user } = useAuth();
+    const { user, refreshToken } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(id) fetchPost(id, setError, setPost, setIsLoading);
+        if(id) fetchPost(id, setIsLoading, refreshToken, setError, setPost);
     }, []);
 
     if (!isLoading && post) {

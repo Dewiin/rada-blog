@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router"
 
 // types
-import type { IPost } from "../types/Post"
+import type { IPost } from "@/components/types/Post"
 
 // components
-import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar"
+import { PostActions } from "./PostActions";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { RiGeminiFill } from "react-icons/ri";
 import { FaComment } from "react-icons/fa6";
 import { PiHandsClappingFill } from "react-icons/pi";
@@ -20,15 +21,18 @@ export function PostPreview({ post }: { post: IPost }) {
             className="flex flex-col gap-4 m-4 h-fit cursor-pointer"
             onClick={() => navigate(`/post/${post.id}`)}
         >   
-            {/* author */}
-            <div 
-                className="flex gap-2"
-            >
-                <Avatar size="sm">
-                    <AvatarImage alt={`@${post.author.username}`} />
-                    <AvatarFallback>{post.author.username.substring(0,2)}</AvatarFallback>
-                </Avatar>
-                <p>{post.author.username}</p>
+            <div className="flex justify-between items-center">
+                {/* author */}
+                <div 
+                    className="flex gap-2"
+                >
+                    <Avatar size="sm">
+                        <AvatarImage alt={`@${post.author.username}`} />
+                        <AvatarFallback>{post.author.username.substring(0,2)}</AvatarFallback>
+                    </Avatar>
+                    <p>{post.author.username}</p>
+                </div>
+                <PostActions />
             </div>
 
             {/* title and subtitle */}
