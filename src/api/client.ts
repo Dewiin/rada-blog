@@ -5,6 +5,7 @@ export async function api(
     options: RequestInit = {},
     refreshToken: Function,
     setError?: Function,
+    setSuccess?: Function,
 ) {
     let response = await fetch(`${VITE_API_URL}${path}`, {
         ...options,
@@ -25,6 +26,10 @@ export async function api(
             title: result?.error,
         });
         result = null;
+    } else {
+        setSuccess && setSuccess({
+            title: result.message
+        });
     }
 
     return result;

@@ -1,33 +1,19 @@
+import { api } from "./client";
 import type { IUser } from "@/components/types/User";
-
-const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 export async function fetchAllPosts(
     setPosts: Function,
     setError: Function,
-    setIsLoading: Function
+    setIsLoading: Function,
+    refreshToken: Function,
 ) {
     setIsLoading(true);
     try {
-        const response = await fetch(`${VITE_API_URL}/api/posts`, {
+        const result = await api('/api/posts', {
             method: "GET",
-            credentials: "include",
-        });
+        }, refreshToken, setError);
         
-        if(!response.ok) {
-            setError({
-                title: "Error getting a response.",
-                description: "Please try again later."
-            });
-            return;
-        } 
-        const result = await response.json();
         setPosts(result.posts);
-    } catch (err: any) {
-        setError({
-            title: "Server error",
-            description: "Please try again later."
-        });
     } finally {
         setIsLoading(false);
     }
@@ -35,31 +21,18 @@ export async function fetchAllPosts(
 
 export async function fetchPost(
     id: string,
+    setIsLoading: Function,
+    refreshToken: Function,
     setError: Function,
     setPost: Function,
-    setIsLoading: Function
 ) {
     setIsLoading(true);
     try {
-        const response = await fetch(`${VITE_API_URL}/api/posts/${id}`, {
+        const result = await api(`/api/posts/${id}`, {
             method: "GET",
-            credentials: "include",
-        });
+        }, refreshToken, setError);
 
-        if(!response.ok) {
-            setError({
-                title: "Error getting a response.",
-                description: "Please try again later."
-            });
-            return;
-        } 
-        const result = await response.json();
         setPost(result.post);
-    } catch (err) {
-        setError({
-            title: "Server error",
-            description: "Please try again later."
-        });
     } finally {
         setIsLoading(false);
     }
@@ -84,35 +57,11 @@ export async function createPost(data: {
             authorId: user?.id
         };
         
-        let response = await fetch(`${VITE_API_URL}/api/posts`, {
+        await api('/api/posts', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),
-            credentials: "include",
-        });
-        
-        if(response.status === 401) {
-            await refreshToken();
-            response = await fetch(`${VITE_API_URL}/api/posts`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body),
-                credentials: "include",
-            });
-        }  
-
-        const result = await response.json();
-        if(!response.ok) {
-            setError({
-                title: result.error,
-                description: "Please try again."
-            });
-        } else {
-            setSuccess({
-                title: result.message,
-                description: "View the new post on the home page."
-            })
-        }
+        }, refreshToken, setError, setSuccess);
     } finally {
         setIsLoading(false);
     }
@@ -137,34 +86,45 @@ export async function savePost(data: {
             authorId: user?.id
         };
         
-        let response = await fetch(`${VITE_API_URL}/api/posts`, {
+        await api('/api/posts', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),
-            credentials: "include",
-        });
-        if(response.status === 401) {
-            await refreshToken();
-            response = await fetch(`${VITE_API_URL}/api/posts`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body),
-                credentials: "include",
-            });
-        }
-        const result = await response.json();
-        
-        if(!response.ok) {
-            setError({
-                title: result.error,
-                description: "Please try again."
-            });
-        } else {
-            setSuccess({
-                title: result.message,
-                description: "View saved posts in your profile."
-            });
-        }
+        }, refreshToken, setError, setSuccess);
+    } finally {
+        setIsLoading(false);
+    }
+}
+
+export async function deletePost(
+    postId: string,
+    setIsLoading: Function,
+    setError: Function,
+    setSuccess: Function,
+    refreshToken: Function
+) {
+    setIsLoading(true);
+    try {
+        await api(`/posts/${postId}`, {
+            method: "DELETE",
+        }, refreshToken, setError, setSuccess);
+    } finally {
+        setIsLoading(false);
+    }
+}
+
+export async function updatePost(
+    postId: string,
+    setIsLoading: Function,
+    setError: Function,
+    setSuccess: Function,
+    refreshToken: Function
+) {
+    setIsLoading(true);
+    try {
+        await api(`/api/posts/${postId}`, {
+            method: "PUT"
+        }, refreshToken, setError, setSuccess);
     } finally {
         setIsLoading(false);
     }
