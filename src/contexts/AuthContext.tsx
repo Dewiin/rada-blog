@@ -10,6 +10,8 @@ type AuthContextProps = {
     setUser: (user: IUser | null) => void, 
     checkToken: () => Promise<void>,
     refreshToken: () => Promise<void>,
+    isAuthLoading: boolean,
+    setIsAuthLoading: (isAuthLoading: boolean) => void,
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -17,16 +19,20 @@ const AuthContext = createContext<AuthContextProps>({
     setUser: () => {},
     checkToken: async () => {},
     refreshToken: async () => {},
+    isAuthLoading: false,
+    setIsAuthLoading: () => {},
 });
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<IUser|null>(null);
+    const [isAuthLoading, setIsAuthLoading] = useState<boolean>(false);
     
     useEffect(() => {
         checkToken();
     }, []);
 
     async function checkToken() {
+        setIsAuthLoading(true);
         try {  
             let response = await fetch(`${VITE_API_URL}/api/auth/verifyToken`, {
                 method: "POST",
@@ -51,10 +57,13 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         } catch (err: any) {
             console.error(`Error in checkToken: ${err.message}, ${err.stack}`);
             setUser(null);
+        } finally {
+            setIsAuthLoading(false);
         }
     }
 
     async function refreshToken() {
+        setIsAuthLoading(true);
         try {
             await fetch(`${VITE_API_URL}/api/auth/refresh`, {
                 method: "POST",
@@ -62,6 +71,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
             });
         } catch (err: any) {
             console.error(`Error in refreshToken: ${err.message}, ${err.stack}`);
+        } finally {
+            setIsAuthLoading(false);
         }
     }
     
@@ -69,7 +80,9 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         user,
         setUser,
         checkToken,
-        refreshToken
+        refreshToken,
+        isAuthLoading,
+        setIsAuthLoading
     }
 
     return (
