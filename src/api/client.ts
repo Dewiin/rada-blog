@@ -4,7 +4,7 @@ export async function api(
     path: string,
     options: RequestInit = {},
     refreshToken: Function,
-    setError: Function,
+    setError?: Function,
 ) {
     let response = await fetch(`${VITE_API_URL}${path}`, {
         ...options,
@@ -21,7 +21,7 @@ export async function api(
 
     let result = await response.json();
     if (!response.ok) {
-        setError({
+        setError && setError({
             title: result?.error,
         });
         result = null;
