@@ -10,6 +10,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { toast } from "sonner";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { PencilIcon, ShareIcon, TrashIcon } from "lucide-react"
 
@@ -20,12 +21,15 @@ import { useAuth } from "@/contexts/AuthContext";
 // types
 import type { IPost } from "@/components/types/Post";
 
-export function PostActions( { post }: { post: IPost } ) {
+export function PostActions( { post, setPosts }: { post: IPost, setPosts: Function } ) {
     const { setIsLoading, setError, setSuccess } = useUI();
     const { refreshToken } = useAuth();
 
     async function onDeleteSubmit() {
-        await deletePost(post.id.toLocaleString(), setIsLoading, setError, setSuccess, refreshToken);
+        await toast.promise(
+            deletePost(post.id.toLocaleString(), setPosts, setError, setSuccess, refreshToken),
+            { loading: "Deleting post..." }
+        );
     }
 
     async function onUpdateSubmit() {

@@ -1,5 +1,6 @@
 import { api } from "./client";
 import type { IUser } from "@/components/types/User";
+import type { IPost } from "@/components/types/Post";
 
 export async function fetchAllPosts(
     setPosts: Function,
@@ -98,18 +99,19 @@ export async function savePost(data: {
 
 export async function deletePost(
     postId: string,
-    setIsLoading: Function,
+    setPosts: Function,
     setError: Function,
     setSuccess: Function,
     refreshToken: Function
 ) {
-    setIsLoading(true);
-    try {
-        await api(`/posts/${postId}`, {
-            method: "DELETE",
-        }, refreshToken, setError, setSuccess);
-    } finally {
-        setIsLoading(false);
+    const result = await api(`/api/posts/${postId}`, {
+        method: "DELETE",
+    }, refreshToken, setError, setSuccess);
+
+    if(result) {
+        setPosts((prev: IPost[]) => (
+            prev.filter((post) => post.id !== parseInt(postId))
+        ));
     }
 }
 

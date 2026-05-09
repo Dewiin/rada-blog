@@ -13,7 +13,7 @@ import { PiHandsClappingFill } from "react-icons/pi";
 // helpers
 import { formatDate } from "@/helpers/formatDate";
 
-export function PostPreview({ post, showAction=true }: { post: IPost, showAction?: boolean }) {
+export function PostPreview({ post, setPosts=()=>{}, showAction=true }: { post: IPost, setPosts?: Function, showAction?: boolean }) {
     const navigate = useNavigate();
 
     return (
@@ -33,7 +33,7 @@ export function PostPreview({ post, showAction=true }: { post: IPost, showAction
                     <p>{post.author.username}</p>
                 </div>
                 {showAction && 
-                    <PostActions post={post}/>
+                    <PostActions post={post} setPosts={setPosts} />
                 }
             </div>
 

@@ -91,6 +91,7 @@ export function AccountProfileScreen() {
                             >
                                 <PostPreview 
                                     post={publishedPost} 
+                                    setPosts={setPublishedPosts}
                                 />
                                 {index < publishedPosts.length-1 && <Separator />}
                             </div>
@@ -112,6 +113,7 @@ export function AccountProfileScreen() {
                         >
                             <PostPreview 
                                 post={unpublishedPost} 
+                                setPosts={setUnpublishedPosts}
                             />
                             {index < unpublishedPosts.length-1 && <Separator />}
                         </div>
