@@ -12,21 +12,8 @@ import { cn } from "@/lib/utils"
 import { Moon, Sun } from "lucide-react"
 
 // Simple logo component for the navbar
-const Logo = (props: React.SVGAttributes<SVGElement>) => {
+const Logo = () => {
   return (
-    // <svg
-    //   aria-label="Logo"
-    //   role="img"
-    //   fill="none"
-    //   height="1em"
-    //   viewBox="0 0 324 323"
-    //   width="1em"
-    //   xmlns="http://www.w3.org/2000/svg"
-    //   {...(props as any)}
-    // >
-    //   <rect fill="currentColor" height="323" rx="161.5" width="323" x="0.5" />
-    //   <circle cx="162" cy="161.5" fill="white" r="60" className="dark:fill-black" />
-    // </svg>
     <svg 
       aria-label="Logo"
       role="img"

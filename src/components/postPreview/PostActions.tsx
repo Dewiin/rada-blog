@@ -18,6 +18,9 @@ import { PencilIcon, ShareIcon, TrashIcon } from "lucide-react"
 import { useUI } from "@/contexts/UIContext";
 import { useAuth } from "@/contexts/AuthContext";
 
+// screens
+import { EditPostScreen } from "@/components/screens/EditPostScreen";
+
 // types
 import type { IPost } from "@/components/types/Post";
 
@@ -33,7 +36,8 @@ export function PostActions( { post, setPosts }: { post: IPost, setPosts: Functi
     }
 
     async function onUpdateSubmit() {
-        await updatePost(post.id.toLocaleString(), setIsLoading, setError, setSuccess, refreshToken);
+        // await updatePost(post.id.toLocaleString(), setIsLoading, setError, setSuccess, refreshToken);
+        return <EditPostScreen />
     }
 
     return (

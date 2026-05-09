@@ -38,6 +38,7 @@ export function HomeScreen() {
             { !isLoading && posts.length > 0 && posts.map((post, index) => (
                 <div
                     key={post.id}
+                    className="flex flex-col gap-4"
                 >
                     <PostPreview
                         post={post} 

@@ -1,17 +1,17 @@
-// Screens
+import { Routes, Route } from "react-router-dom";
+import './App.css'
+
+// components
+import { Navbar } from "./components/navbar/navbar";
+import { TooltipProvider } from "./components/ui/tooltip";
+
+// screens
 import { HomeScreen } from "./components/screens/HomeScreen";
 import { PostScreen } from "./components/screens/PostScreen";
 import { AccountProfileScreen } from "./components/screens/AccountProfileScreen";
 import { AccountSettingsScreen } from "./components/screens/AccountSettingsScreen";
 import { CreatePostScreen } from "./components/screens/CreatePostScreen";
 import { PageNotFoundScreen } from "./components/screens/PageNotFoundScreen";
-
-// Components
-import { Navbar } from "./components/navbar/navbar";
-import { TooltipProvider } from "./components/ui/tooltip";
-
-import { Routes, Route } from "react-router-dom";
-import './App.css'
 
 function App() {
   

@@ -25,12 +25,20 @@ export function PostPreview({ post, setPosts=()=>{}, showAction=true }: { post: 
                 {/* author */}
                 <div 
                     className="flex gap-2"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/profile/${post.author.id}`)
+                    }}
                 >
                     <Avatar size="sm">
                         <AvatarImage alt={`@${post.author.username}`} />
                         <AvatarFallback>{post.author.username.substring(0,2)}</AvatarFallback>
                     </Avatar>
-                    <p>{post.author.username}</p>
+                    <p 
+                        className="hover:underline"
+                    >
+                        {post.author.username}
+                    </p>
                 </div>
                 {showAction && 
                     <PostActions post={post} setPosts={setPosts} />
