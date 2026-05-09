@@ -17,37 +17,40 @@ import { PencilIcon, ShareIcon, TrashIcon } from "lucide-react"
 import { useUI } from "@/contexts/UIContext";
 import { useAuth } from "@/contexts/AuthContext";
 
-export function PostActions( { postId }: { postId: string } ) {
+// types
+import type { IPost } from "@/components/types/Post";
+
+export function PostActions( { post }: { post: IPost } ) {
     const { setIsLoading, setError, setSuccess } = useUI();
     const { refreshToken } = useAuth();
 
     async function onDeleteSubmit() {
-        await deletePost(postId, setIsLoading, setError, setSuccess, refreshToken);
+        await deletePost(post.id.toLocaleString(), setIsLoading, setError, setSuccess, refreshToken);
     }
 
     async function onUpdateSubmit() {
-        await updatePost(postId, setIsLoading, setError, setSuccess, refreshToken);
+        await updatePost(post.id.toLocaleString(), setIsLoading, setError, setSuccess, refreshToken);
     }
 
     return (
-        <>
+        <>  
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <HiDotsHorizontal size={20} />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                     onClick={(e) => e.stopPropagation()}
-                >
+                    >
                     <DropdownMenuGroup>
                         <DropdownMenuItem
                             onClick={() => onUpdateSubmit()}
-                        >
+                            >
                             <PencilIcon />
                             Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={() => console.log("share")}
-                        >
+                            >
                             <ShareIcon />
                             Share
                         </DropdownMenuItem>
@@ -57,7 +60,7 @@ export function PostActions( { postId }: { postId: string } ) {
                         <DropdownMenuItem 
                             onClick={() => onDeleteSubmit()}
                             variant="destructive"
-                        >
+                            >
                             <TrashIcon />
                             Delete
                         </DropdownMenuItem>
