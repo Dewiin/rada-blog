@@ -109,12 +109,14 @@ export function PostScreen() {
 
                     {/* body */}
                     {post && 
-                    <div
-                        dangerouslySetInnerHTML={{
-                            __html: DOMPurify.sanitize(post.content)
-                        }}
-                        className="text-lg/8"
-                    />
+                    <div className="prose prose-sm dark:prose-invert prose-stone max-w-none">
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: DOMPurify.sanitize(post.content)
+                            }}
+                            className="text-lg/8"
+                        />
+                    </div>
                     }
                 </div>
             </div>
