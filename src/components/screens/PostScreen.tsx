@@ -69,13 +69,24 @@ export function PostScreen() {
                             </p>
 
                             {/* author */}
-                            <div className="flex gap-2 items-center text-sm">
-                                <Avatar size="default">
+                            <div 
+                                onClick={() => navigate(`/profile/${post?.author.id}`)}
+                                className="flex gap-2 items-center text-sm cursor-pointer"
+                            >
+                                <Avatar 
+                                    size="default"
+                                >
                                     <AvatarImage alt={`@${post?.author.username}`} />
                                     <AvatarFallback>{post?.author.username.substring(0,2)}</AvatarFallback>
                                 </Avatar>
                                 <p>
-                                    {post?.author.username} · <span className="dark:text-stone-500 text-stone-600">{post && formatDate(post.createdAt)}</span>
+                                    <span className="hover:underline">
+                                        {post?.author.username}
+                                    </span>
+                                    {" · "} 
+                                    <span className="dark:text-stone-500 text-stone-600">
+                                        {post && formatDate(post.createdAt)}
+                                    </span>
                                 </p>
                             </div>
 
