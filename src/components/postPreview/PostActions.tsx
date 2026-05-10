@@ -25,7 +25,7 @@ import { EditPostScreen } from "@/components/screens/EditPostScreen";
 import type { IPost } from "@/components/types/Post";
 
 export function PostActions( { post, setPosts }: { post: IPost, setPosts: Function } ) {
-    const { setIsLoading, setError, setSuccess } = useUI();
+    const { setError, setSuccess } = useUI();
     const { refreshToken } = useAuth();
 
     async function onDeleteSubmit() {

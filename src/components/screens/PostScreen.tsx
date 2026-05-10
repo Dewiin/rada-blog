@@ -16,6 +16,7 @@ import { SkeletonPostScreen } from "@/components/skeleton/SkeletonPostScreen";
 import { FaArrowLeft, FaRegComment } from "react-icons/fa6";
 import { PiHandsClappingLight } from "react-icons/pi";
 import { PageForbiddenScreen } from "./PageForbiddenScreen";
+import { CommentSection } from "@/components/comments/CommentSection";
 
 // contexts
 import { useUI } from "@/contexts/UIContext";
@@ -50,7 +51,7 @@ export function PostScreen() {
                 </div>
 
                 {/* content */}
-                <div className="w-full flex flex-col gap-12">
+                <div className="w-full flex flex-col gap-4">
                     {/* header */}
                     <div className="flex flex-col gap-4">
 
@@ -118,7 +119,11 @@ export function PostScreen() {
                         />
                     </div>
                     }
+
+                    {/* Comments */}
+                    <CommentSection post={post} />
                 </div>
+
             </div>
         </>
     )
