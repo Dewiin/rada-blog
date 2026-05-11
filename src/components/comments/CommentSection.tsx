@@ -128,7 +128,7 @@ export function CommentSection({ post }: { post: IPost | null }) {
                             )}
                         </Field>
                     )}
-                    />
+                />
             </form>
 
             <Separator />
