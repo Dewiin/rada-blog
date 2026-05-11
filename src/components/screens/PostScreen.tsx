@@ -2,12 +2,9 @@ import { useParams, useNavigate } from "react-router"
 import { useEffect, useState } from "react"
 import DOMPurify from "dompurify";
 
-// helpers
+// api
 import { fetchPost } from "@/api/posts";
-import { formatDate } from "@/helpers/formatDate";
-
-// types
-import type { IPost } from "@/components/types/Post";
+import { postClap } from "@/api/clap";
 
 // components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -23,9 +20,17 @@ import { Drawer, DrawerTrigger, DrawerContent } from "@/components/ui/drawer";
 import { useUI } from "@/contexts/UIContext";
 import { useAuth } from "@/contexts/AuthContext";
 
+// helpers
+import { formatDate } from "@/helpers/formatDate";
+import { aggregateClaps } from "@/helpers/aggregateClaps";
+
+// types
+import type { IPost } from "@/components/types/Post";
+
 export function PostScreen() {
     const { id } = useParams();
-    const [ post, setPost ] = useState<IPost | null>(null);
+    const [post, setPost] = useState<IPost | null>(null);
+    const [claps, setClaps] = useState<number>(0);
     const { setError, isLoading, setIsLoading } = useUI();
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -34,10 +39,18 @@ export function PostScreen() {
         if(id) fetchPost(id, setIsLoading, setError, setPost);
     }, []);
 
+    useEffect(() => {
+        if(post) setClaps(aggregateClaps(post.claps));
+    }, [post]);
+
     if (!isLoading && post) {
         if (!post.published && post.author.id !== user?.id) {
             return <PageForbiddenScreen />
         }
+    }
+
+    async function onClapSubmit() {
+        if(post) await postClap(post.id.toLocaleString(), setClaps, setError);
     }
 
     return (
@@ -95,9 +108,12 @@ export function PostScreen() {
                             <Separator />
                                 {/* claps and comments */}
                                 <div className="flex gap-8 mx-2">
-                                    <div className="flex items-center gap-2 cursor-pointer">
+                                    <div 
+                                        className="flex items-center gap-2 cursor-pointer"
+                                        onClick={() => onClapSubmit()}
+                                    >
                                         <PiHandsClappingLight />
-                                        {post?.claps.length}
+                                        {claps}
                                     </div>
                                     <Drawer direction="right">
                                         <DrawerTrigger asChild>
