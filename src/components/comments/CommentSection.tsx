@@ -47,13 +47,15 @@ export function CommentSection({ post }: { post: IPost | null }) {
         },
         mode: "onChange",
     });
+
+    const { reset } = form;
     
     async function onSubmit(data: z.infer<typeof commentSchema>) {
         const comment = {
             content: data.comment,
-            userId: user?.id,
         }
-        await postComment(comment, post?.id.toLocaleString(), setComments, setError, setIsSubmitting);
+        const result = await postComment(comment, post?.id.toLocaleString(), setComments, setError, setIsSubmitting);
+        if(result) reset();
     }
 
     return (
@@ -70,7 +72,7 @@ export function CommentSection({ post }: { post: IPost | null }) {
                 onSubmit={form.handleSubmit(onSubmit)} 
                 className="flex flex-col gap-3"
             >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-sm">
                     <Avatar>
                         <AvatarImage alt={`@${user?.username}`} />
                         <AvatarFallback>{user?.username.substring(0,2)}</AvatarFallback>
@@ -89,16 +91,16 @@ export function CommentSection({ post }: { post: IPost | null }) {
                                     placeholder={user ? "What are your thoughts?" : "Sign in to comment"}
                                     disabled={isSubmitting || !user}
                                     className={`resize-none transition-all duration-500 ease-out ${
-                                        startCommenting ? "min-h-[120px]" : "min-h-[40px]"
-                                        }`}
-                                        aria-invalid={fieldState.invalid}
-                                        onFocus={() => setStartCommenting(true)}
-                                        onBlur={(e) => {
-                                            if (!e.target.value.trim()) {
-                                                setStartCommenting(false);
-                                            }
-                                        }}
-                                        />
+                                    startCommenting ? "min-h-[120px]" : "min-h-[40px]"
+                                    }`}
+                                    aria-invalid={fieldState.invalid}
+                                    onFocus={() => setStartCommenting(true)}
+                                    onBlur={(e) => {
+                                        if (!e.target.value.trim()) {
+                                            setStartCommenting(false);
+                                        }
+                                    }}
+                                />
                                 {startCommenting &&
                                 <>
                                     <InputGroupAddon align="block-end">
@@ -131,8 +133,11 @@ export function CommentSection({ post }: { post: IPost | null }) {
 
             <Separator />
 
-            {comments.map((comment: IComment) => (
-                <Comment comment={comment} />
+            {comments.map((comment: IComment, index) => (
+                <Comment 
+                    key={index}
+                    comment={comment} 
+                />
             ))}
         </div>
     )

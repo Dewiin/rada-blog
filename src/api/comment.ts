@@ -4,13 +4,12 @@ import type { IComment } from "@/components/types/Comment";
 export async function postComment(
     data: {
         content: string,
-        userId?: string,
     },
     postId: string | undefined,
     setComments: Function,
     setError: Function,
     setIsSubmitting: Function,
-) {
+): Promise<boolean> {
     setIsSubmitting(true);
     try {
         const result = await api(`/api/comments/${postId}`, {
@@ -19,12 +18,14 @@ export async function postComment(
             headers: { "Content-Type": "application/json" }
         }, setError);
     
-        if(result.comment) {
+        if(result.message) {
             setComments((prev: IComment[]) => ([
-                result.comment,
+                result.result,
                 ...prev
             ]));
+            return true;
         }
+        return false;
     } finally {
         setIsSubmitting(false);
     }
