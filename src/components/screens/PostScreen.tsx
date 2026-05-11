@@ -26,11 +26,11 @@ export function PostScreen() {
     const { id } = useParams();
     const [ post, setPost ] = useState<IPost | null>(null);
     const { setError, isLoading, setIsLoading } = useUI();
-    const { user, refreshToken } = useAuth();
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(id) fetchPost(id, setIsLoading, refreshToken, setError, setPost);
+        if(id) fetchPost(id, setIsLoading, setError, setPost);
     }, []);
 
     if (!isLoading && post) {
@@ -121,7 +121,7 @@ export function PostScreen() {
                     }
 
                     {/* Comments */}
-                    <CommentSection post={post} />
+                    {!isLoading && <CommentSection post={post} /> }
                 </div>
 
             </div>

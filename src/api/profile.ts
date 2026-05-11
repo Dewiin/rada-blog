@@ -2,13 +2,12 @@ import { api } from "./client";
 
 export async function fetchAllPublishedPosts(
     setPosts: Function,
-    setError: Function,
-    refreshToken: Function,
+    setError: Function
 ) {
     try {
         const data = await api('/api/profile/published', {
             method: "GET"
-        }, refreshToken);
+        });
         
         setPosts(data?.posts || []);
     } catch (err: any) {
@@ -21,13 +20,12 @@ export async function fetchAllPublishedPosts(
 
 export async function fetchAllUnpublishedPosts(
     setPosts: Function,
-    setError: Function,
-    refreshToken: Function,
+    setError: Function
 ) {
     try {
         const data = await api('/api/profile/unpublished', {
             method: "GET"
-        }, refreshToken);
+        });
         
         setPosts(data?.posts || []);
     } catch (err: any) {

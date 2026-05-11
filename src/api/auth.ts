@@ -1,6 +1,7 @@
-const VITE_API_URL = import.meta.env.VITE_API_URL;
+import { api } from "./client";
 
-export async function signup(data: {
+export async function signup(
+    data: {
         username: string,
         password: string, 
         confirmPassword: string
@@ -8,58 +9,35 @@ export async function signup(data: {
     setIsLoading: Function,
     setError: Function,
     setSuccess: Function,
-    checkToken: Function,
 ) {
     setIsLoading(true);
     try {
-        const response = await fetch(`${VITE_API_URL}/api/auth/signup`, {
+        await api('/api/auth/signup', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
-            credentials: "include",
-        });
-        const result = await response.json();
-        if(!response.ok) {
-            if(response.status === 409) {
-                setError({
-                    title: result.error,
-                    description: "Please try again with a different username."
-                })
-            }
-        } else {
-            setSuccess({ title: result.message }); 
-            await checkToken();
-        }
+        }, setError, setSuccess);
     } finally {
         setIsLoading(false);
     }
 }   
     
-export async function login(data: {
+export async function login(
+    data: {
         username: string,
         password: string,
     },
     setIsLoading: Function,
     setError: Function,
     setSuccess: Function,
-    checkToken: Function,
 ) {
     setIsLoading(true);
     try {
-        const response = await fetch(`${VITE_API_URL}/api/auth/login`, {
+        await api('/api/auth/login', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
-            credentials: "include",
-        });
-        const result = await response.json();
-
-        if(!response.ok) {
-            setError({ title: result.error });
-        } else {
-            setSuccess({ title: result.message }); 
-            await checkToken();
-        }
+        }, setError, setSuccess);
     } finally {
         setIsLoading(false);
     }
@@ -73,18 +51,11 @@ export async function logout(
 ) {
     setIsLoading(true);
     try {
-        const response = await fetch(`${VITE_API_URL}/api/auth/logout`, {
+        const result = await api('/api/auth/logout', {
             method: "POST",
-            credentials: "include",
-        });
-        const result = await response.json();
-
-        if(!response.ok) {
-            setError({ title: result.error });
-        } else {
-            setUser(null);
-            if(result.message) setSuccess({ title: result.message });
-        }
+        }, setError, setSuccess);
+        
+        if(result.message) setUser(null);
     } finally {
         setIsLoading(false);
     }

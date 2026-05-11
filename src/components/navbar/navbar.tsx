@@ -23,16 +23,16 @@ const Logo = () => {
       xmlns="http://www.w3.org/2000/svg" 
       transform="rotate(0)matrix(1, 0, 0, 1, 0, 0)"
     >
-      <g id="SVGRepo_bgCarrier" stroke-width="0" />
-      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.8" />
+      <g id="SVGRepo_bgCarrier" strokeWidth="0" />
+      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" stroke="#CCCCCC" strokeWidth="0.8" />
       <g id="SVGRepo_iconCarrier"> 
         <path 
           d="M80.6217 59.1676C116.502 55.4997 339 45.6991 339 63.5823C339 150.887 351.127 311.5 339 325.495C319.5 348 89.0019 353 73.6589 338.949C58.6562 325.21 64.7292 157.8 64.7292 103.154" 
           stroke="#000000" 
-          stroke-opacity="0.9" 
-          stroke-width="40" 
-          stroke-linecap="round" 
-          stroke-linejoin="round"
+          strokeOpacity="0.9" 
+          strokeWidth="40" 
+          strokeLinecap="round" 
+          strokeLinejoin="round"
           className="dark:stroke-white"
         /> 
       </g>

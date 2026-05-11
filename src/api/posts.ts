@@ -6,13 +6,12 @@ export async function fetchAllPosts(
     setPosts: Function,
     setError: Function,
     setIsLoading: Function,
-    refreshToken: Function,
 ) {
     setIsLoading(true);
     try {
         const result = await api('/api/posts', {
             method: "GET",
-        }, refreshToken, setError);
+        }, setError);
         
         setPosts(result.posts);
     } finally {
@@ -23,7 +22,6 @@ export async function fetchAllPosts(
 export async function fetchPost(
     id: string,
     setIsLoading: Function,
-    refreshToken: Function,
     setError: Function,
     setPost: Function,
 ) {
@@ -31,7 +29,7 @@ export async function fetchPost(
     try {
         const result = await api(`/api/posts/${id}`, {
             method: "GET",
-        }, refreshToken, setError);
+        }, setError);
 
         setPost(result.post);
     } finally {
@@ -39,13 +37,13 @@ export async function fetchPost(
     }
 }
 
-export async function createPost(data: {
+export async function createPost(
+    data: {
         title: string,
         subtitle: string,
         content: string
     },
     setIsLoading: Function,
-    refreshToken: Function,
     setError: Function,
     setSuccess: Function,
     user: IUser | null,
@@ -62,19 +60,19 @@ export async function createPost(data: {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),
-        }, refreshToken, setError, setSuccess);
+        }, setError, setSuccess);
     } finally {
         setIsLoading(false);
     }
 }
 
-export async function savePost(data: {
+export async function savePost(
+    data: {
         title: string,
         subtitle: string,
         content: string
     },
     setIsLoading: Function,
-    refreshToken: Function, 
     setError: Function,
     setSuccess: Function,
     user: IUser | null
@@ -91,7 +89,7 @@ export async function savePost(data: {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),
-        }, refreshToken, setError, setSuccess);
+        }, setError, setSuccess);
     } finally {
         setIsLoading(false);
     }
@@ -101,12 +99,11 @@ export async function deletePost(
     postId: string,
     setPosts: Function,
     setError: Function,
-    setSuccess: Function,
-    refreshToken: Function
+    setSuccess: Function
 ) {
     const result = await api(`/api/posts/${postId}`, {
         method: "DELETE",
-    }, refreshToken, setError, setSuccess);
+    }, setError, setSuccess);
 
     if(result) {
         setPosts((prev: IPost[]) => (
@@ -120,13 +117,12 @@ export async function updatePost(
     setIsLoading: Function,
     setError: Function,
     setSuccess: Function,
-    refreshToken: Function
 ) {
     setIsLoading(true);
     try {
         await api(`/api/posts/${postId}`, {
             method: "PUT"
-        }, refreshToken, setError, setSuccess);
+        }, setError, setSuccess);
     } finally {
         setIsLoading(false);
     }

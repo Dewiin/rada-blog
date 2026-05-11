@@ -22,7 +22,7 @@ import { Field, FieldGroup, FieldError } from "../ui/field";
 import { toast } from "sonner";
 
 export function CreatePostScreen() {
-    const { user, refreshToken } = useAuth();
+    const { user } = useAuth();
     const { isLoading, setIsLoading, setError, setSuccess } = useUI();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -36,11 +36,11 @@ export function CreatePostScreen() {
     })
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
-        await toast.promise(createPost(data, setIsLoading, refreshToken, setError, setSuccess, user) , { loading: "Submitting post..." });
+        await toast.promise(createPost(data, setIsLoading, setError, setSuccess, user) , { loading: "Submitting post..." });
     }
 
     async function onSave(data: z.infer<typeof formSchema>) {
-        await toast.promise(savePost(data, setIsLoading, refreshToken, setError, setSuccess, user), { loading: "Saving post..." });
+        await toast.promise(savePost(data, setIsLoading, setError, setSuccess, user), { loading: "Saving post..." });
     }
 
     return (

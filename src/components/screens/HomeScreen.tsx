@@ -10,7 +10,6 @@ import { SkeletonPostPreview } from "@/components/skeleton/SkeletonPostPreview";
 
 // contexts
 import { useUI } from "@/contexts/UIContext";
-import { useAuth } from "@/contexts/AuthContext";
 
 // types
 import type { IPost } from "@/components/types/Post";
@@ -18,10 +17,9 @@ import type { IPost } from "@/components/types/Post";
 export function HomeScreen() {
     const [ posts, setPosts ] = useState<IPost[]>([]);
     const { setError, isLoading, setIsLoading } = useUI();
-    const { refreshToken } = useAuth();
 
     useEffect(() => {
-        fetchAllPosts(setPosts, setError, setIsLoading, refreshToken);
+        fetchAllPosts(setPosts, setError, setIsLoading);
     }, []);
 
     return (

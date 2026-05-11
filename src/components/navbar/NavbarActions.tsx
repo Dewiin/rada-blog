@@ -4,42 +4,42 @@ import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import z from "zod"
 
-// schemas
-import { signupSchema, loginSchema } from "@/zodSchemas/auth"
-
-// contexts
-import { useAuth } from "@/contexts/AuthContext"
-import { useUI } from "@/contexts/UIContext"
-
 // api
 import { signup, login, logout } from "@/api/auth"
 
 // components
 import { Button, GoogleSVG } from "@/components/ui/button"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
 import { User, Settings, LogOut, Newspaper } from "lucide-react"
+
+// contexts
+import { useAuth } from "@/contexts/AuthContext"
+import { useUI } from "@/contexts/UIContext"
+
+// schemas
+import { signupSchema, loginSchema } from "@/zodSchemas/auth"
 
 type AuthProps = {
     signInText?: string
@@ -52,8 +52,8 @@ export function NavbarActions({
     ctaText,
 }: AuthProps) {
     const [mode, setMode] = useState<AuthModes>("signup");
-    const { user, setUser, checkToken } = useAuth();
-    const { isLoading, setIsLoading, setSuccess, setError } = useUI();
+    const { user, setUser, getUser, setIsAuthLoading } = useAuth();
+    const { isLoading, setSuccess, setError } = useUI();
     const navigate = useNavigate();
 
     const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -76,21 +76,21 @@ export function NavbarActions({
 
     async function onSignupSubmit(data: z.infer<typeof signupSchema>) {
         await toast.promise(
-            signup(data, setIsLoading, setError, setSuccess, checkToken),
+            signup(data, setIsAuthLoading, setError, setSuccess),
             { loading: "Signing up..." }
         );    
     }   
         
     async function onLoginSubmit(data: z.infer<typeof loginSchema>) {
         await toast.promise(
-            login(data, setIsLoading, setError, setSuccess, checkToken),
+            login(data, setIsAuthLoading, setError, setSuccess),
             { loading: "Logging in..." }
         );
     }
 
     async function onLogoutSubmit() {
         await toast.promise(
-            logout(setIsLoading, setUser, setError, setSuccess),
+            logout(setIsAuthLoading, setUser, setError, setSuccess),
             { loading: "Logging out..." }
         );
     }

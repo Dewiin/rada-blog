@@ -20,7 +20,7 @@ import { SkeletonProfile } from "@/components/skeleton/SkeletonProfile";
 import type { IPost } from "../types/Post";
 
 export function AccountProfileScreen() {
-    const { user, refreshToken, isAuthLoading } = useAuth();
+    const { user, isAuthLoading } = useAuth();
     const { isLoading, setIsLoading, setError } = useUI();
     const [publishedPosts, setPublishedPosts] = useState<IPost[]>([]);
     const [unpublishedPosts, setUnpublishedPosts] = useState<IPost[]>([]);
@@ -30,8 +30,8 @@ export function AccountProfileScreen() {
             setIsLoading(true);
             try {
                 await Promise.all([
-                    fetchAllPublishedPosts(setPublishedPosts, setError, refreshToken),
-                    fetchAllUnpublishedPosts(setUnpublishedPosts, setError, refreshToken)
+                    fetchAllPublishedPosts(setPublishedPosts, setError),
+                    fetchAllUnpublishedPosts(setUnpublishedPosts, setError)
                 ]);
             } finally {
                 setIsLoading(false);

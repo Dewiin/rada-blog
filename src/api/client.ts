@@ -3,7 +3,6 @@ const VITE_API_URL = import.meta.env.VITE_API_URL;
 export async function api(
     path: string,
     options: RequestInit = {},
-    refreshToken: Function,
     setError?: Function,
     setSuccess?: Function,
 ) {
@@ -13,7 +12,11 @@ export async function api(
     });
 
     if(response.status === 401) {
-        await refreshToken();
+        await fetch(`${VITE_API_URL}/api/auth/refresh`, {
+            method: "POST",
+            credentials: "include"
+        });
+
         response = await fetch(`${VITE_API_URL}${path}`, {
             ...options,
             credentials: "include"
@@ -33,4 +36,21 @@ export async function api(
     }
 
     return result;
+}
+
+export async function fetchUser(
+    setUser: Function,
+    setError: Function,
+    setIsLoading: Function,
+) {
+    setIsLoading(true);
+    try {
+        const user = await api('/api/auth/me', {
+            method: "GET"
+        }, setError);
+    
+        setUser(user);
+    } finally {
+        setIsLoading(false);
+    }
 }
