@@ -76,14 +76,14 @@ export function NavbarActions({
 
     async function onSignupSubmit(data: z.infer<typeof signupSchema>) {
         await toast.promise(
-            signup(data, setIsAuthLoading, setError, setSuccess),
+            signup(data, setIsAuthLoading, setError, setSuccess, getUser),
             { loading: "Signing up..." }
         );    
     }   
         
     async function onLoginSubmit(data: z.infer<typeof loginSchema>) {
         await toast.promise(
-            login(data, setIsAuthLoading, setError, setSuccess),
+            login(data, setIsAuthLoading, setError, setSuccess, getUser),
             { loading: "Logging in..." }
         );
     }

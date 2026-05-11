@@ -9,6 +9,7 @@ export async function signup(
     setIsLoading: Function,
     setError: Function,
     setSuccess: Function,
+    getUser: Function,
 ) {
     setIsLoading(true);
     try {
@@ -17,6 +18,7 @@ export async function signup(
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }, setError, setSuccess);
+        getUser();
     } finally {
         setIsLoading(false);
     }
@@ -30,6 +32,7 @@ export async function login(
     setIsLoading: Function,
     setError: Function,
     setSuccess: Function,
+    getUser: Function,
 ) {
     setIsLoading(true);
     try {
@@ -38,6 +41,7 @@ export async function login(
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }, setError, setSuccess);
+        getUser();
     } finally {
         setIsLoading(false);
     }

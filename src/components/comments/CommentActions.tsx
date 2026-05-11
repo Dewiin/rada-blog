@@ -1,5 +1,5 @@
 // api
-import { deletePost, updatePost } from "@/api/posts";
+import { deleteComment, updateComment } from "@/api/comment";
 
 // components
 import {
@@ -12,53 +12,41 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { toast } from "sonner";
 import { HiDotsHorizontal } from "react-icons/hi";
-import { PencilIcon, ShareIcon, TrashIcon } from "lucide-react"
+import { PencilIcon, TrashIcon } from "lucide-react"
 
 // contexts
 import { useUI } from "@/contexts/UIContext";
 
-// screens
-import { EditPostScreen } from "@/components/screens/EditPostScreen";
-
 // types
-import type { IPost } from "@/components/types/Post";
+import type { IComment } from "@/components/types/Comment";
 
-export function PostActions( { post, setPosts }: { post: IPost, setPosts: Function } ) {
+export function CommentActions( { comment, setComments }: { comment: IComment, setComments: Function } ) {
     const { setError, setSuccess } = useUI();
 
     async function onDeleteSubmit() {
         await toast.promise(
-            deletePost(post.id.toLocaleString(), setPosts, setError, setSuccess),
-            { loading: "Deleting post..." }
+            deleteComment(comment.id.toLocaleString(), setComments, setError, setSuccess),
+            { loading: "Deleting comment..." }
         );
     }
 
     async function onUpdateSubmit() {
-        // await updatePost(post.id.toLocaleString(), setIsLoading, setError, setSuccess, refreshToken);
-        return <EditPostScreen />
+        // await updateComment
     }
 
     return (
         <>  
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <HiDotsHorizontal size={20} />
+                    <HiDotsHorizontal />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent 
-                    onClick={(e) => e.stopPropagation()}
-                    >
+                <DropdownMenuContent>
                     <DropdownMenuGroup>
                         <DropdownMenuItem
                             onClick={() => onUpdateSubmit()}
                             >
                             <PencilIcon />
                             Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            onClick={() => console.log("share")}
-                            >
-                            <ShareIcon />
-                            Share
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />

@@ -30,3 +30,24 @@ export async function postComment(
         setIsSubmitting(false);
     }
 }
+
+export async function deleteComment(
+    commentId: string,
+    setComments: Function, 
+    setError: Function,
+    setSuccess: Function,
+) {
+    const result = await api(`/api/comments/${commentId}`, {
+        method: "DELETE"
+    }, setError, setSuccess);
+
+    if(result.message) {
+        setComments((prev: IComment[]) => (
+            prev.filter((comment: IComment) => comment.id !== parseInt(commentId))
+        ));
+    }
+}
+
+export async function updateComment() {
+
+}

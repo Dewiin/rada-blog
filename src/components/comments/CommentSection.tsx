@@ -137,6 +137,7 @@ export function CommentSection({ post }: { post: IPost | null }) {
                 <Comment 
                     key={index}
                     comment={comment} 
+                    setComments={setComments}
                 />
             ))}
         </div>
