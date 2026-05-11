@@ -17,6 +17,7 @@ import { FaArrowLeft, FaRegComment } from "react-icons/fa6";
 import { PiHandsClappingLight } from "react-icons/pi";
 import { PageForbiddenScreen } from "./PageForbiddenScreen";
 import { CommentSection } from "@/components/comments/CommentSection";
+import { Drawer, DrawerTrigger, DrawerContent } from "@/components/ui/drawer";
 
 // contexts
 import { useUI } from "@/contexts/UIContext";
@@ -94,14 +95,21 @@ export function PostScreen() {
                             <Separator />
                                 {/* claps and comments */}
                                 <div className="flex gap-8 mx-2">
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 cursor-pointer">
                                         <PiHandsClappingLight />
                                         {post?.claps.length}
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <FaRegComment />
-                                        {post?.comments.length}
-                                    </div>
+                                    <Drawer direction="right">
+                                        <DrawerTrigger asChild>
+                                            <div className="flex items-center gap-2 cursor-pointer">
+                                                <FaRegComment />
+                                                {post?.comments.length}
+                                            </div>
+                                        </DrawerTrigger>
+                                        <DrawerContent>
+                                            <CommentSection post={post} isDrawer />
+                                        </DrawerContent>
+                                    </Drawer>
                                 </div>
                             <Separator />
                         </>
@@ -119,6 +127,8 @@ export function PostScreen() {
                         />
                     </div>
                     }
+
+                    <Separator className="my-12" />
 
                     {/* Comments */}
                     {!isLoading && <CommentSection post={post} /> }

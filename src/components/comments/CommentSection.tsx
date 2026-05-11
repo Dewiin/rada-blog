@@ -33,7 +33,7 @@ import { commentSchema } from "@/zodSchemas/comment";
 import type { IPost } from "@/components/types/Post";
 import type { IComment } from "@/components/types/Comment";
 
-export function CommentSection({ post }: { post: IPost | null }) {
+export function CommentSection({ post, isDrawer=false }: { post: IPost | null, isDrawer?: boolean }) {
     const [startCommenting, setStartCommenting] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [comments, setComments] = useState<IComment[]>(post?.comments || []);
@@ -59,13 +59,13 @@ export function CommentSection({ post }: { post: IPost | null }) {
     }
 
     return (
-        <div className="flex flex-col gap-8 mt-24">
-            <Separator />
-
+        <div className={`flex flex-col gap-8 ${isDrawer && "m-8"}`}>
             {/* Header */}
             <p className="font-semibold text-2xl">
                 Discussion ({post?.comments.length})
             </p>
+
+            { isDrawer && <Separator /> }
 
             {/* What are your thoughts?  */}
             <form
