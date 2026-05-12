@@ -52,8 +52,8 @@ export function NavbarActions({
     ctaText,
 }: AuthProps) {
     const [mode, setMode] = useState<AuthModes>("signup");
-    const { user, setUser, getUser, setIsAuthLoading } = useAuth();
-    const { isLoading, setSuccess, setError } = useUI();
+    const { user, setUser, getUser, isAuthLoading, setIsAuthLoading } = useAuth();
+    const { setSuccess, setError } = useUI();
     const navigate = useNavigate();
 
     const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -97,7 +97,7 @@ export function NavbarActions({
 
     return (
         <>
-            {!user ?
+            {!user && !isAuthLoading &&
                 <Dialog>
                     <DialogTrigger asChild>
                         <Button
@@ -194,7 +194,7 @@ export function NavbarActions({
                                     />
                                 </FieldGroup>
 
-                                <Button className="w-full" type="submit" disabled={isLoading}>Create Account</Button>
+                                <Button className="w-full" type="submit" disabled={isAuthLoading}>Create Account</Button>
 
                                 <div className="relative flex items-center gap-2">
                                     <Separator className="flex-1" />
@@ -203,7 +203,7 @@ export function NavbarActions({
                                     </span>
                                     <Separator className="flex-1" />
                                 </div>
-                                <Button className="w-full" variant="outline" type="button" disabled={isLoading}>
+                                <Button className="w-full" variant="outline" type="button" disabled={isAuthLoading}>
                                     <GoogleSVG />
                                     Continue with Google
                                 </Button>
@@ -277,7 +277,7 @@ export function NavbarActions({
                                     />
                                 </FieldGroup>
 
-                                <Button className="w-full" type="submit" disabled={isLoading}>Log In</Button>
+                                <Button className="w-full" type="submit" disabled={isAuthLoading}>Log In</Button>
 
                                 <div className="relative flex items-center gap-2">
                                     <Separator className="flex-1" />
@@ -286,7 +286,7 @@ export function NavbarActions({
                                     </span>
                                     <Separator className="flex-1" />
                                 </div>
-                                <Button className="w-full" variant="outline" type="button" disabled={isLoading}>
+                                <Button className="w-full" variant="outline" type="button" disabled={isAuthLoading}>
                                     <GoogleSVG />
                                     Continue with Google
                                 </Button>
@@ -307,7 +307,8 @@ export function NavbarActions({
                         }
                     </DialogContent>
                 </Dialog>
-                :
+            }
+            {user &&
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button className="relative h-10 w-10 rounded-sm" variant="ghost">
