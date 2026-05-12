@@ -15,6 +15,7 @@ import { PiHandsClappingLight } from "react-icons/pi";
 import { PageForbiddenScreen } from "./PageForbiddenScreen";
 import { CommentSection } from "@/components/comments/CommentSection";
 import { Drawer, DrawerTrigger, DrawerContent } from "@/components/ui/drawer";
+import { SlidingNumber } from "@/components/animate-ui/primitives/texts/sliding-number";
 
 // contexts
 import { useUI } from "@/contexts/UIContext";
@@ -28,9 +29,9 @@ import { aggregateClaps } from "@/helpers/aggregateClaps";
 import type { IPost } from "@/components/types/Post";
 
 export function PostScreen() {
-    const { id } = useParams();
     const [post, setPost] = useState<IPost | null>(null);
     const [claps, setClaps] = useState<number>(0);
+    const { id } = useParams();
     const { setError, isLoading, setIsLoading } = useUI();
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -112,8 +113,12 @@ export function PostScreen() {
                                         className="flex items-center gap-2 cursor-pointer"
                                         onClick={() => onClapSubmit()}
                                     >
-                                        <PiHandsClappingLight />
-                                        {claps}
+                                        <PiHandsClappingLight className="active:scale-90" />
+                                        <SlidingNumber 
+                                            number={claps}
+                                            delay={100}
+                                            thousandSeparator=","
+                                        />
                                     </div>
                                     <Drawer direction="right">
                                         <DrawerTrigger asChild>
