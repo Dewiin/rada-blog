@@ -59,7 +59,7 @@ export function CommentSection({ post, isDrawer=false }: { post: IPost | null, i
     }
 
     return (
-        <div className={`flex flex-col gap-8 ${isDrawer && "m-8"}`}>
+        <div className={`flex flex-col gap-8 ${isDrawer && "m-8"} overflow-y-auto no-scrollbar`}>
             {/* Header */}
             <p className="font-semibold text-2xl">
                 Discussion ({post?.comments.length})

@@ -127,7 +127,7 @@ export function PostScreen() {
                                                 {post?.comments.length}
                                             </div>
                                         </DrawerTrigger>
-                                        <DrawerContent className="overflow-y-scroll overflow-x-hidden">
+                                        <DrawerContent>
                                             <CommentSection post={post} isDrawer />
                                         </DrawerContent>
                                     </Drawer>
