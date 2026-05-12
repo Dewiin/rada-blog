@@ -97,27 +97,31 @@ export function NavbarActions({
 
     return (
         <>
-            {!user && !isAuthLoading &&
+            {!user &&
                 <Dialog>
-                    <DialogTrigger asChild>
-                        <Button
-                            className="text-sm font-medium px-4 h-9 hover:bg-accent hover:text-accent-foreground"
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => setMode("login")}
-                        >
-                            {signInText}
-                        </Button>
-                    </DialogTrigger>
-                    <DialogTrigger asChild>
-                        <Button
-                            className="text-sm font-medium px-4 h-9 rounded-md shadow-sm"
-                            size="sm"
-                            onClick={() => setMode("signup")}
-                        >
-                            {ctaText}
-                        </Button>
-                    </DialogTrigger>
+                    {!isAuthLoading &&
+                        <>
+                        <DialogTrigger asChild>
+                            <Button
+                                className="text-sm font-medium px-4 h-9 hover:bg-accent hover:text-accent-foreground"
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setMode("login")}
+                                >
+                                {signInText}
+                            </Button>
+                        </DialogTrigger>
+                        <DialogTrigger asChild>
+                            <Button
+                                className="text-sm font-medium px-4 h-9 rounded-md shadow-sm"
+                                size="sm"
+                                onClick={() => setMode("signup")}
+                                >
+                                {ctaText}
+                            </Button>
+                        </DialogTrigger>
+                        </>
+                    }
                     <DialogContent className="sm:max-w-md">
                         {mode === "signup" && 
                         <>
