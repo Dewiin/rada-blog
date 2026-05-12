@@ -1,8 +1,5 @@
 import { useNavigate } from "react-router"
 
-// types
-import type { IPost } from "@/components/types/Post"
-
 // components
 import { PostActions } from "./PostActions";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
@@ -12,6 +9,10 @@ import { PiHandsClappingFill } from "react-icons/pi";
 
 // helpers
 import { formatDate } from "@/helpers/formatDate";
+import { aggregateClaps } from "@/helpers/aggregateClaps";
+
+// types
+import type { IPost } from "@/components/types/Post"
 
 export function PostPreview({ post, setPosts=()=>{}, showAction=true }: { post: IPost, setPosts?: Function, showAction?: boolean }) {
     const navigate = useNavigate();
@@ -76,7 +77,7 @@ export function PostPreview({ post, setPosts=()=>{}, showAction=true }: { post: 
                 {/* claps/upvotes */}
                 <div className="flex items-center gap-2 dark:text-stone-500 text-stone-600">
                     <PiHandsClappingFill />
-                    {post.claps.length}
+                    {aggregateClaps(post.claps)}
                 </div>
 
                 {/* comments */}

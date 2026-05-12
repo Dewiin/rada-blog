@@ -116,7 +116,6 @@ export function PostScreen() {
                                         <PiHandsClappingLight className="active:scale-90" />
                                         <SlidingNumber 
                                             number={claps}
-                                            delay={100}
                                             thousandSeparator=","
                                         />
                                     </div>
