@@ -123,11 +123,11 @@ export function PostScreen() {
                                     <Drawer direction="right">
                                         <DrawerTrigger asChild>
                                             <div className="flex items-center gap-2 cursor-pointer">
-                                                <FaRegComment />
+                                                <FaRegComment className="active:scale-90" />
                                                 {post?.comments.length}
                                             </div>
                                         </DrawerTrigger>
-                                        <DrawerContent>
+                                        <DrawerContent className="overflow-y-scroll overflow-x-hidden">
                                             <CommentSection post={post} isDrawer />
                                         </DrawerContent>
                                     </Drawer>
