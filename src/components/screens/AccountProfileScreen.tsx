@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 // api
-import { fetchAllPublishedPosts, fetchAllUnpublishedPosts } from "@/api/profile";
+import { fetchAllPublishedPosts, fetchAllUnpublishedPosts, fetchAllActivity } from "@/api/profile";
 
 // contexts
 import { useAuth } from "@/contexts/AuthContext"
@@ -15,6 +15,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator";
 import { SkeletonPostPreview } from "@/components/skeleton/SkeletonPostPreview";
 import { SkeletonProfile } from "@/components/skeleton/SkeletonProfile";
+import { FaRegComment } from "react-icons/fa6";
+import { PiHandsClappingLight } from "react-icons/pi";
 
 // types
 import type { IPost } from "../types/Post";
@@ -24,6 +26,7 @@ export function AccountProfileScreen() {
     const { isLoading, setIsLoading, setError } = useUI();
     const [publishedPosts, setPublishedPosts] = useState<IPost[]>([]);
     const [unpublishedPosts, setUnpublishedPosts] = useState<IPost[]>([]);
+    const [activities, setActivities] = useState<any[]>([]);
 
     useEffect(() => {
         async function load() {
@@ -31,7 +34,8 @@ export function AccountProfileScreen() {
             try {
                 await Promise.all([
                     fetchAllPublishedPosts(setPublishedPosts, setError),
-                    fetchAllUnpublishedPosts(setUnpublishedPosts, setError)
+                    fetchAllUnpublishedPosts(setUnpublishedPosts, setError),
+                    fetchAllActivity(setActivities, setError)
                 ]);
             } finally {
                 setIsLoading(false);
@@ -100,9 +104,9 @@ export function AccountProfileScreen() {
                 </TabsContent>
                 
                 <TabsContent value="unpublished" className="flex flex-col gap-4">
-                    { isLoading && 
-                        <SkeletonPostPreview />
-                    }
+                    { isLoading && Array.from({ length: 3 }).map((_, index) => (
+                        <SkeletonPostPreview key={index} />
+                    ))}
                     { !isLoading && unpublishedPosts.length === 0 && 
                         <p className="text-center text-sm">You have no unpublished posts.</p> 
                     }
@@ -121,7 +125,32 @@ export function AccountProfileScreen() {
                 </TabsContent>
 
                 <TabsContent value="activity">
-                    <p className="text-center text-sm">You have no activity.</p> 
+                    { isLoading && Array.from({ length: 3 }).map((_, index) => (
+                        <SkeletonPostPreview key={index} />
+                    ))}
+                    { activities.length === 0 &&
+                        <p className="text-center text-sm mt-12">You have no activity.</p> 
+                    }
+                    { !isLoading && activities.length > 0 && activities.map((activity, index) => (
+                        <div
+                            key={activity.id}
+                            className="flex flex-col gap-4"
+                        >   
+                            <div className="mt-8 mx-4 flex gap-2 items-center dark:text-stone-500 text-stone-600">
+                                <p>
+                                    {activity.type === "clap" ? <PiHandsClappingLight /> : <FaRegComment />}
+                                </p>
+                                <p className="text-sm">
+                                    {activity.type === "clap" ? "You clapped" : "You responded"}
+                                </p>
+                            </div>
+                            <PostPreview 
+                                post={activity} 
+                                setPosts={setActivities}
+                            />
+                            {index < activities.length-1 && <Separator />}
+                        </div>
+                    ))}
                 </TabsContent>
             </Tabs>
             }   

@@ -8,7 +8,7 @@ import { postClap } from "@/api/clap";
 
 // components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "../ui/separator";
+import { Separator } from "@/components/ui/separator";
 import { SkeletonPostScreen } from "@/components/skeleton/SkeletonPostScreen";
 import { FaArrowLeft, FaRegComment } from "react-icons/fa6";
 import { PiHandsClappingLight } from "react-icons/pi";
