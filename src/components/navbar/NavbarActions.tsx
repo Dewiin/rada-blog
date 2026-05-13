@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import z from "zod"
 
 // api
-import { signup, login, logout } from "@/api/auth"
+import { signup, login, logout, googleLogin } from "@/api/auth"
 
 // components
 import { Button, GoogleSVG } from "@/components/ui/button"
@@ -207,7 +207,13 @@ export function NavbarActions({
                                     </span>
                                     <Separator className="flex-1" />
                                 </div>
-                                <Button className="w-full" variant="outline" type="button" disabled={isAuthLoading}>
+                                <Button 
+                                    className="w-full" 
+                                    variant="outline" 
+                                    type="button" 
+                                    disabled={isAuthLoading}
+                                    onClick={() => googleLogin()}
+                                >
                                     <GoogleSVG />
                                     Continue with Google
                                 </Button>
@@ -290,7 +296,13 @@ export function NavbarActions({
                                     </span>
                                     <Separator className="flex-1" />
                                 </div>
-                                <Button className="w-full" variant="outline" type="button" disabled={isAuthLoading}>
+                                <Button 
+                                    className="w-full" 
+                                    variant="outline" 
+                                    type="button" 
+                                    disabled={isAuthLoading}
+                                    onClick={() => googleLogin()}
+                                >
                                     <GoogleSVG />
                                     Continue with Google
                                 </Button>

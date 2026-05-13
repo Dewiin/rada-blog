@@ -1,4 +1,5 @@
 import { api } from "./client";
+import { VITE_API_URL } from "./client";
 
 export async function signup(
     data: {
@@ -63,4 +64,8 @@ export async function logout(
     } finally {
         setIsLoading(false);
     }
+}
+
+export async function googleLogin() {
+    window.location.href = `${VITE_API_URL}/api/auth/google`
 }
