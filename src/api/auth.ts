@@ -66,6 +66,9 @@ export async function logout(
     }
 }
 
-export async function googleLogin() {
+export async function googleLogin(
+    setIsLoading: Function,
+) {
+    setIsLoading(true);
     window.location.href = `${VITE_API_URL}/api/auth/google`
 }

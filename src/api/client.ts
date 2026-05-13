@@ -47,8 +47,7 @@ export async function fetchUser(
     try {
         const user = await api('/api/auth/me', {
             method: "GET"
-        }, setError);
-    
+        }, setError); 
         setUser(user);
     } finally {
         setIsLoading(false);

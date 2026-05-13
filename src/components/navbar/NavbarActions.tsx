@@ -95,6 +95,10 @@ export function NavbarActions({
         );
     }
 
+    function onGoogleLogin() {
+        googleLogin(setIsAuthLoading);
+    }
+
     return (
         <>
             {!user &&
@@ -149,6 +153,7 @@ export function NavbarActions({
                                                     {...field}
                                                     aria-invalid={fieldState.invalid}
                                                     autoComplete="off"
+                                                    disabled={isAuthLoading}
                                                 />
                                                 {fieldState.invalid && (
                                                     <FieldError errors={[fieldState.error]} />
@@ -169,6 +174,7 @@ export function NavbarActions({
                                                     type="password"
                                                     aria-invalid={fieldState.invalid}
                                                     autoComplete="new-password"
+                                                    disabled={isAuthLoading}
                                                 />
                                                 {fieldState.invalid && (
                                                     <FieldError errors={[fieldState.error]} />
@@ -189,6 +195,7 @@ export function NavbarActions({
                                                     type="password"
                                                     aria-invalid={fieldState.invalid}
                                                     autoComplete="new-password"
+                                                    disabled={isAuthLoading}
                                                 />
                                                 {fieldState.invalid && (
                                                     <FieldError errors={[fieldState.error]} />
@@ -212,7 +219,7 @@ export function NavbarActions({
                                     variant="outline" 
                                     type="button" 
                                     disabled={isAuthLoading}
-                                    onClick={() => googleLogin()}
+                                    onClick={() => onGoogleLogin()}
                                 >
                                     <GoogleSVG />
                                     Continue with Google
@@ -258,6 +265,7 @@ export function NavbarActions({
                                                     {...field}
                                                     aria-invalid={fieldState.invalid}
                                                     autoComplete="off"
+                                                    disabled={isAuthLoading}
                                                 />
                                                 {fieldState.invalid && (
                                                     <FieldError errors={[fieldState.error]} />
@@ -278,6 +286,7 @@ export function NavbarActions({
                                                     type="password"
                                                     aria-invalid={fieldState.invalid}
                                                     autoComplete="new-password"
+                                                    disabled={isAuthLoading}
                                                 />
                                                 {fieldState.invalid && (
                                                     <FieldError errors={[fieldState.error]} />
@@ -301,7 +310,7 @@ export function NavbarActions({
                                     variant="outline" 
                                     type="button" 
                                     disabled={isAuthLoading}
-                                    onClick={() => googleLogin()}
+                                    onClick={() => onGoogleLogin()}
                                 >
                                     <GoogleSVG />
                                     Continue with Google
