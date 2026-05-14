@@ -1,4 +1,5 @@
 import { api } from "./client";
+import type { IPost } from "@/components/types/Post";
 
 export async function fetchAllPublishedPosts(
     setPosts: Function,
@@ -30,11 +31,9 @@ export async function fetchAllActivity(
         method: "GET"
     }, setError);
 
-    console.log(data.clapsActivity);
-    console.log(data.commentsActivity);
-    setActivity([...data.clapsActivity, ...data.commentsActivity]).sort(
-        (a: any, b: any) =>
-            new Date(b.createdAt).getTime() -
-            new Date(a.createdAt).getTime()
+    const activity = [...(data.clapsActivity || []), ...(data.commentsActivity || [])].sort(
+        (a: IPost, b: IPost) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     );
+
+    setActivity(activity);
 }
