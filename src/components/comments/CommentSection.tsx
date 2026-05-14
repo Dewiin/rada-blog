@@ -7,10 +7,7 @@ import z from "zod";
 import { postComment } from "@/api/comment";
 
 // components
-import {
-    Field,
-    FieldError,
-} from "@/components/ui/field"
+import { Field, FieldError } from "@/components/ui/field"
 import {
     InputGroup,
     InputGroupAddon,
@@ -52,7 +49,7 @@ export function CommentSection({ post, isDrawer=false }: { post: IPost | null, i
     
     async function onSubmit(data: z.infer<typeof commentSchema>) {
         const comment = {
-            content: data.comment,
+            content: data.comment.trim(),
         }
         const result = await postComment(comment, post?.id.toLocaleString(), setComments, setError, setIsSubmitting);
         if(result) reset();

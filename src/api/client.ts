@@ -48,8 +48,6 @@ export async function fetchUser(
         const user = await api('/api/auth/me', {
             method: "GET"
         }, setError); 
-
-        console.log(user);
         setUser(user);
     } finally {
         setIsLoading(false);

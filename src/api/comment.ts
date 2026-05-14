@@ -48,6 +48,38 @@ export async function deleteComment(
     }
 }
 
-export async function updateComment() {
+export async function updateComment(
+    data: {
+        content: string,
+    },
+    commentId: string,
+    setComments: Function,
+    setError: Function,
+    setisSubmitting: Function
+) {
+    setisSubmitting(true);
+    try {
+        const result = await api(`/api/comments/${commentId}`, {
+            method: "PUT",
+            body: JSON.stringify(data),
+            headers: {"Content-Type": "application/json"}
+        }, setError);
+        
+        if(result.comment) {
+            setComments((prev: IComment[]) => (
+                prev.map((comment) => {
+                    if(comment.id.toLocaleString() === commentId) {
+                        return {
+                            ...comment,
+                            content: data.content,
+                        }
+                    }
 
+                    return comment;
+                })
+            ));
+        };
+    } finally {
+        setisSubmitting(false);
+    }
 }

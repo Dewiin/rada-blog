@@ -1,5 +1,5 @@
 // api
-import { deleteComment, updateComment } from "@/api/comment";
+import { deleteComment } from "@/api/comment";
 
 // components
 import {
@@ -20,7 +20,14 @@ import { useUI } from "@/contexts/UIContext";
 // types
 import type { IComment } from "@/components/types/Comment";
 
-export function CommentActions( { comment, setComments }: { comment: IComment, setComments: Function } ) {
+type CommentActionsProps = {
+    comment: IComment,
+    setComments: Function,
+    setIsEditing: Function,
+    form: any
+}
+
+export function CommentActions( { comment, setComments, setIsEditing, form }: CommentActionsProps) {
     const { setError, setSuccess } = useUI();
 
     async function onDeleteSubmit() {
@@ -31,7 +38,11 @@ export function CommentActions( { comment, setComments }: { comment: IComment, s
     }
 
     async function onUpdateSubmit() {
-        // await updateComment
+        setIsEditing(true);
+
+        form.reset({
+            comment: comment.content
+        });
     }
 
     return (
@@ -44,7 +55,7 @@ export function CommentActions( { comment, setComments }: { comment: IComment, s
                     <DropdownMenuGroup>
                         <DropdownMenuItem
                             onClick={() => onUpdateSubmit()}
-                            >
+                        >
                             <PencilIcon />
                             Edit
                         </DropdownMenuItem>
@@ -54,7 +65,7 @@ export function CommentActions( { comment, setComments }: { comment: IComment, s
                         <DropdownMenuItem 
                             onClick={() => onDeleteSubmit()}
                             variant="destructive"
-                            >
+                        >
                             <TrashIcon />
                             Delete
                         </DropdownMenuItem>

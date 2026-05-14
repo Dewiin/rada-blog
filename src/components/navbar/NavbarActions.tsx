@@ -367,13 +367,6 @@ export function NavbarActions({
                       <User />
                       View Profile
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                        onClick={() => navigate(`/settings/${user && user.id}`)}
-                    >
-                      <Settings />
-                      Account Settings
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
                     <DropdownMenuItem variant="destructive"
                     onClick={() => onLogoutSubmit()}
                     >

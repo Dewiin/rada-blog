@@ -9,7 +9,6 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { HomeScreen } from "./components/screens/HomeScreen";
 import { PostScreen } from "./components/screens/PostScreen";
 import { AccountProfileScreen } from "./components/screens/AccountProfileScreen";
-import { AccountSettingsScreen } from "./components/screens/AccountSettingsScreen";
 import { CreatePostScreen } from "./components/screens/CreatePostScreen";
 import { PageNotFoundScreen } from "./components/screens/PageNotFoundScreen";
 
@@ -22,7 +21,6 @@ function App() {
         <Route path="/" element={ <HomeScreen/> } />
         <Route path="/post/:id" element={ <PostScreen /> } />
         <Route path="/profile/:userId" element={ <AccountProfileScreen /> } />
-        <Route path="/settings/:userId" element={ <AccountSettingsScreen /> } />
         <Route path="/create" element={ <CreatePostScreen /> } />
         <Route path="/*" element={ <PageNotFoundScreen /> } />
       </Routes>
