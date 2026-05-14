@@ -19,7 +19,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { UserAvatar } from "@/components/avatar/UserAvatar"
 import { Badge } from "@/components/ui/badge"
 import {
     DropdownMenu,
@@ -337,21 +337,15 @@ export function NavbarActions({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button className="relative h-10 w-10 rounded-sm" variant="ghost">
-                      <Avatar size="default">
-                        <AvatarImage alt={`@${user.username}`} />
-                        <AvatarFallback>{user.username.substring(0,2)}</AvatarFallback>
-                      </Avatar>
+                      <UserAvatar user={user} size="default" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-64">
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-12 w-12">
-                          <AvatarImage alt={`@${user.username}`} />
-                          <AvatarFallback>{user.username.substring(0,2)}</AvatarFallback>
-                        </Avatar>
+                        <UserAvatar user={user} className="h-12 w-12" />
                         <div className="flex flex-col space-y-1 gap-1">
-                          <p className="font-medium text-sm leading-none">{user.username}</p>
+                          <p className="font-medium text-sm leading-none">{user.displayName}</p>
                           <Badge className="w-fit text-xs" variant="secondary">
                             {user.role.charAt(0) + user.role.substring(1).toLocaleLowerCase()}
                           </Badge>

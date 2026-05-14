@@ -18,7 +18,7 @@ import {
     InputGroupText,
     InputGroupTextarea,
 } from "@/components/ui/input-group";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/avatar/UserAvatar";
 import { Separator } from "@/components/ui/separator";
 import { Comment } from "./Comment";
 
@@ -73,11 +73,8 @@ export function CommentSection({ post, isDrawer=false }: { post: IPost | null, i
                 className="flex flex-col gap-3"
             >
                 <div className="flex items-center gap-2 text-sm">
-                    <Avatar>
-                        <AvatarImage alt={`@${user?.username}`} />
-                        <AvatarFallback>{user?.username.substring(0,2)}</AvatarFallback>
-                    </Avatar>
-                    <p>{user?.username}</p>
+                    <UserAvatar user={user} />
+                    <p>{user?.displayName}</p>
                 </div>
                 
                 <Controller

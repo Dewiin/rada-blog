@@ -7,7 +7,7 @@ import { fetchPost } from "@/api/posts";
 import { postClap } from "@/api/clap";
 
 // components
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/avatar/UserAvatar";
 import { Separator } from "@/components/ui/separator";
 import { SkeletonPostScreen } from "@/components/skeleton/SkeletonPostScreen";
 import { FaArrowLeft, FaRegComment } from "react-icons/fa6";
@@ -89,15 +89,10 @@ export function PostScreen() {
                                 onClick={() => navigate(`/profile/${post?.author.id}`)}
                                 className="flex gap-2 items-center text-sm cursor-pointer"
                             >
-                                <Avatar 
-                                    size="default"
-                                >
-                                    <AvatarImage alt={`@${post?.author.username}`} />
-                                    <AvatarFallback>{post?.author.username.substring(0,2)}</AvatarFallback>
-                                </Avatar>
+                                <UserAvatar user={post?.author} size="default" />
                                 <p>
                                     <span className="hover:underline">
-                                        {post?.author.username}
+                                        {post?.author.displayName}
                                     </span>
                                     {" · "} 
                                     <span className="dark:text-stone-500 text-stone-600">

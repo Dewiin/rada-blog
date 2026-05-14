@@ -2,7 +2,7 @@ import { useNavigate } from "react-router"
 
 // components
 import { PostActions } from "./PostActions";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { UserAvatar } from "@/components/avatar/UserAvatar";
 import { RiGeminiFill } from "react-icons/ri";
 import { FaComment } from "react-icons/fa6";
 import { PiHandsClappingFill } from "react-icons/pi";
@@ -31,14 +31,9 @@ export function PostPreview({ post, setPosts=()=>{}, showAction=true }: { post: 
                         navigate(`/profile/${post.author.id}`)
                     }}
                 >
-                    <Avatar size="sm">
-                        <AvatarImage alt={`@${post.author.username}`} />
-                        <AvatarFallback>{post.author.username.substring(0,2)}</AvatarFallback>
-                    </Avatar>
-                    <p 
-                        className="hover:underline"
-                    >
-                        {post.author.username}
+                    <UserAvatar user={post.author} size="sm" />
+                    <p className="hover:underline">
+                        {post.author.displayName}
                     </p>
                 </div>
                 {showAction && 

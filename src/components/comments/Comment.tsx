@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 
 // components
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/avatar/UserAvatar";
 import { CommentActions } from "./CommentActions";
 
 // contexts
@@ -33,12 +33,9 @@ export function Comment({ comment, setComments }: { comment: IComment, setCommen
             {/* Comment Author */}
             <div className="flex justify-between items-center">
                 <div className="flex gap-2 items-center">
-                    <Avatar>
-                        <AvatarImage alt={`@${comment.user.username}`} />
-                        <AvatarFallback>{comment.user.username.substring(0,2)}</AvatarFallback>
-                    </Avatar>
+                    <UserAvatar user={comment.user} />
                     <div>
-                        <p className="text-sm">{comment.user.username}</p>
+                        <p className="text-sm">{comment.user.displayName}</p>
                         <p className="text-xs dark:text-stone-500 text-stone-600">{formatDate(comment.createdAt)}</p>
                     </div>
                 </div>

@@ -10,7 +10,7 @@ import { useUI } from "@/contexts/UIContext";
 // components
 import { PageUnauthorizedScreen } from "./PageUnauthorizedScreen";
 import { PostPreview } from "@/components/postPreview/PostPreview";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/avatar/UserAvatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator";
 import { SkeletonPostPreview } from "@/components/skeleton/SkeletonPostPreview";
@@ -54,11 +54,8 @@ export function AccountProfileScreen() {
             { !isLoading && 
                 // profile 
                 <div className="flex flex-col gap-1 items-center w-fit">
-                    <Avatar className="w-20 h-20">
-                        <AvatarImage alt={`@${user?.username}`} />
-                        <AvatarFallback className="text-xl">{user?.username.substring(0,2)}</AvatarFallback>
-                    </Avatar>
-                    <p className="font-medium text-xl">{user?.username}</p>
+                    <UserAvatar user={user} className="w-20 h-20" />
+                    <p className="font-medium text-xl">{user?.displayName}</p>
                 </div>
             }
 
@@ -128,7 +125,7 @@ export function AccountProfileScreen() {
                     { isLoading && Array.from({ length: 3 }).map((_, index) => (
                         <SkeletonPostPreview key={index} />
                     ))}
-                    { activities.length === 0 &&
+                    { !isLoading && activities.length === 0 &&
                         <p className="text-center text-sm mt-12">You have no activity.</p> 
                     }
                     { !isLoading && activities.length > 0 && activities.map((activity, index) => (
