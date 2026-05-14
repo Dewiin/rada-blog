@@ -32,11 +32,13 @@ export function AccountProfileScreen() {
         async function load() {
             setIsLoading(true);
             try {
-                await Promise.all([
-                    fetchAllPublishedPosts(setPublishedPosts, setError),
-                    fetchAllUnpublishedPosts(setUnpublishedPosts, setError),
-                    fetchAllActivity(setActivities, setError)
-                ]);
+                if(user && user.role === "AUTHOR") {
+                    await Promise.all([
+                        fetchAllPublishedPosts(setPublishedPosts, setError),
+                        fetchAllUnpublishedPosts(setUnpublishedPosts, setError),
+                    ]);
+                }
+                await fetchAllActivity(setActivities, setError);
             } finally {
                 setIsLoading(false);
             }
@@ -130,7 +132,7 @@ export function AccountProfileScreen() {
                     }
                     { !isLoading && activities.length > 0 && activities.map((activity, index) => (
                         <div
-                            key={activity.id}
+                            key={index}
                             className="flex flex-col gap-4"
                         >   
                             <div className="mt-8 mx-4 flex gap-2 items-center dark:text-stone-500 text-stone-600">
