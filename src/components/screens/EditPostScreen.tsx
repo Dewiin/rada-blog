@@ -1,29 +1,39 @@
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useParams } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 
 // api
-import { createPost, savePost } from "@/api/posts";
+import { createPost, savePost, fetchPost } from "@/api/posts";
 
 // schemas
 import { formSchema } from "@/zodSchemas/post";
+
+// components
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { MinimalTiptapEditor } from "@/components/ui/minimal-tiptap"
+import { Button } from "@/components/ui/button";
+import { Field, FieldGroup, FieldError } from "../ui/field";
+import { toast } from "sonner";
 
 // contexts
 import { useAuth } from "@/contexts/AuthContext"
 import { useUI } from "@/contexts/UIContext";
 
-// components
+// screens
 import { PageForbiddenScreen } from "./PageForbiddenScreen";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { MinimalTiptapEditor } from "@/components/ui/minimal-tiptap"
-import { Button } from "../ui/button";
-import { Field, FieldGroup, FieldError } from "../ui/field";
-import { toast } from "sonner";
+
+// types
+import type { IPost } from "@/components/types/Post";
 
 export function EditPostScreen() {
+    const { id } = useParams();
     const { user } = useAuth();
     const { isLoading, setIsLoading, setError, setSuccess } = useUI();
+    
+    const [ post, setPost ] = useState<IPost | null>(null);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -33,7 +43,19 @@ export function EditPostScreen() {
             content: ""
         },
         mode: "onChange",
-    })
+    });
+
+    useEffect(() => {
+        if(id) fetchPost(id, setIsLoading, setError, setPost);
+    }, [id]);
+
+    useEffect(() => {
+        form.reset({
+            title: post?.title || "",
+            subtitle: post?.subtitle || "",
+            content: post?.content || ""
+        });
+    }, [post]);
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
         await toast.promise(createPost(data, setIsLoading, setError, setSuccess, user) , { loading: "Submitting post..." });
@@ -99,6 +121,7 @@ export function EditPostScreen() {
                         render={({ field, fieldState }) => (
                             <Field data-invalid={fieldState.invalid}>
                                 <MinimalTiptapEditor
+                                    key={post?.id}
                                     {...field}
                                     className="w-full"
                                     editorContentClassName="p-5 bg-input/30"

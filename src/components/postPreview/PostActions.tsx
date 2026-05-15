@@ -1,5 +1,7 @@
+import { useNavigate } from "react-router";
+
 // api
-import { deletePost, updatePost } from "@/api/posts";
+import { deletePost } from "@/api/posts";
 
 // components
 import {
@@ -17,25 +19,18 @@ import { PencilIcon, ShareIcon, TrashIcon } from "lucide-react"
 // contexts
 import { useUI } from "@/contexts/UIContext";
 
-// screens
-import { EditPostScreen } from "@/components/screens/EditPostScreen";
-
 // types
 import type { IPost } from "@/components/types/Post";
 
 export function PostActions( { post, setPosts }: { post: IPost, setPosts: Function } ) {
     const { setError, setSuccess } = useUI();
+    const navigate = useNavigate();
 
     async function onDeleteSubmit() {
         await toast.promise(
             deletePost(post.id.toLocaleString(), setPosts, setError, setSuccess),
             { loading: "Deleting post..." }
         );
-    }
-
-    async function onUpdateSubmit() {
-        // await updatePost(post.id.toLocaleString(), setIsLoading, setError, setSuccess, refreshToken);
-        return <EditPostScreen />
     }
 
     return (
@@ -49,7 +44,7 @@ export function PostActions( { post, setPosts }: { post: IPost, setPosts: Functi
                     >
                     <DropdownMenuGroup>
                         <DropdownMenuItem
-                            onClick={() => onUpdateSubmit()}
+                            onClick={() => navigate(`/edit/${post.id}`)}
                             >
                             <PencilIcon />
                             Edit
