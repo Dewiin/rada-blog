@@ -89,11 +89,6 @@ export function CommentSection({ post, isDrawer=false }: { post: IPost | null, i
                                     }`}
                                     aria-invalid={fieldState.invalid}
                                     onFocus={() => setStartCommenting(true)}
-                                    onBlur={(e) => {
-                                        if (!e.target.value.trim()) {
-                                            setStartCommenting(false);
-                                        }
-                                    }}
                                 />
                                 {startCommenting &&
                                 <>
@@ -101,18 +96,29 @@ export function CommentSection({ post, isDrawer=false }: { post: IPost | null, i
                                         <InputGroupText>
                                             {field.value.length}/1000 characters
                                         </InputGroupText>
-                                        <InputGroupButton 
-                                            size="sm"
-                                            type="submit"
-                                            variant="default"
-                                            disabled={isSubmitting} 
-                                            className="ml-auto cursor-pointer"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                            }}    
+                                        <div className="flex gap-2 ml-auto">
+                                            <InputGroupButton 
+                                                size="sm"
+                                                type="button"
+                                                variant="secondary"
+                                                disabled={isSubmitting} 
+                                                className="cursor-pointer"
+                                                onClick={() => {
+                                                    setStartCommenting(false);
+                                                }}    
                                             >
-                                            Post
-                                        </InputGroupButton>    
+                                                Cancel
+                                            </InputGroupButton>
+                                            <InputGroupButton 
+                                                size="sm"
+                                                type="submit"
+                                                variant="default"
+                                                disabled={isSubmitting} 
+                                                className="cursor-pointer" 
+                                            >
+                                                Post
+                                            </InputGroupButton>    
+                                        </div>
                                     </InputGroupAddon>
                                 </>
                                 }

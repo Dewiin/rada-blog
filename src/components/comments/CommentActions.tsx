@@ -54,7 +54,10 @@ export function CommentActions( { comment, setComments, setIsEditing, form }: Co
                 <DropdownMenuContent>
                     <DropdownMenuGroup>
                         <DropdownMenuItem
-                            onClick={() => onUpdateSubmit()}
+                            onSelect={(e) => {
+                                e.preventDefault();
+                                onUpdateSubmit();
+                            }}
                         >
                             <PencilIcon />
                             Edit
@@ -63,7 +66,10 @@ export function CommentActions( { comment, setComments, setIsEditing, form }: Co
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
                         <DropdownMenuItem 
-                            onClick={() => onDeleteSubmit()}
+                            onSelect={(e) => {
+                                e.preventDefault();
+                                onDeleteSubmit();
+                            }}
                             variant="destructive"
                         >
                             <TrashIcon />

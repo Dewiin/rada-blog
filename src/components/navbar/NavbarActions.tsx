@@ -32,7 +32,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
-import { User, Settings, LogOut, Newspaper } from "lucide-react"
+import { User, LogOut, Newspaper } from "lucide-react"
 
 // contexts
 import { useAuth } from "@/contexts/AuthContext"
