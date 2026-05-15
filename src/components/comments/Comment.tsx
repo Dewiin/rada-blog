@@ -54,7 +54,7 @@ export function Comment({ comment, setComments }: { comment: IComment, setCommen
         if (el) {
             setShouldTruncate(el.scrollHeight > el.clientHeight);
         }
-    }, [isEditing]);
+    }, [comment]);
 
     async function onUpdateSubmit(data: z.infer<typeof commentSchema>) {
         const body = { 
