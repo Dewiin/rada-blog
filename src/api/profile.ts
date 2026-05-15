@@ -1,5 +1,4 @@
 import { api } from "./client";
-import type { IPost } from "@/components/types/Post";
 
 export async function fetchAllPublishedPosts(
     setPosts: Function,
