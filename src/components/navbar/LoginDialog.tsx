@@ -40,6 +40,7 @@ import { loginSchema } from "@/zodSchemas/auth"
 export function LoginDialog({ setMode }: { setMode: Function }) {
     const { isAuthLoading, setIsAuthLoading, getUser } = useAuth();
     const { setError, setSuccess } = useUI();
+    const [ passwordVisible, setPasswordVisible ] = useState<boolean>(false);
 
     const loginForm = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
@@ -102,13 +103,19 @@ export function LoginDialog({ setMode }: { setMode: Function }) {
                                 <InputGroup>
                                     <InputGroupInput
                                         {...field}
-                                        type="password"
+                                        type={passwordVisible ? "text" : "password"}
                                         aria-invalid={fieldState.invalid}
                                         autoComplete="new-password"
                                         disabled={isAuthLoading}
                                     />
-                                    <InputGroupAddon align="inline-end">
-                                        <EyeOff />
+                                    <InputGroupAddon 
+                                        align="inline-end"
+                                        className="cursor-pointer"
+                                        onClick={() => setPasswordVisible(!passwordVisible)}    
+                                    >
+                                        {passwordVisible ? 
+                                            <Eye /> : <EyeOff />
+                                        }
                                     </InputGroupAddon>
                                 </InputGroup>
                                 {fieldState.invalid && (

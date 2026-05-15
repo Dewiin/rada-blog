@@ -40,6 +40,13 @@ import { signupSchema } from "@/zodSchemas/auth"
 export function SignupDialog({ setMode }: { setMode: Function }) {
     const { isAuthLoading, setIsAuthLoading, getUser } = useAuth();
     const { setError, setSuccess } = useUI();
+    const [ passwordVisible, setPasswordVisible ] = useState<{
+        "password": boolean,
+        "confirmPassword": boolean
+    }>({
+        "password": false,
+        "confirmPassword": false,
+    });
 
     const signupForm = useForm<z.infer<typeof signupSchema>>({
         resolver: zodResolver(signupSchema),
@@ -103,13 +110,22 @@ export function SignupDialog({ setMode }: { setMode: Function }) {
                                 <InputGroup>
                                     <InputGroupInput
                                         {...field}
-                                        type="password"
+                                        type={passwordVisible["password"] ? "text" : "password"}
                                         aria-invalid={fieldState.invalid}
                                         autoComplete="new-password"
                                         disabled={isAuthLoading}
                                     />
-                                    <InputGroupAddon align="inline-end">
-                                        <EyeOff />
+                                    <InputGroupAddon 
+                                        align="inline-end"
+                                        className="cursor-pointer"
+                                        onClick={() => setPasswordVisible((prev) => ({
+                                            ...prev,
+                                            "password": !passwordVisible["password"]
+                                        }))}          
+                                    >
+                                        {passwordVisible["password"] ? 
+                                            <Eye /> : <EyeOff />
+                                        }
                                     </InputGroupAddon>
                                 </InputGroup>
                                 {fieldState.invalid && (
@@ -129,13 +145,22 @@ export function SignupDialog({ setMode }: { setMode: Function }) {
                                 <InputGroup>
                                     <InputGroupInput
                                         {...field}
-                                        type="password"
+                                        type={passwordVisible["confirmPassword"] ? "text" : "password"}
                                         aria-invalid={fieldState.invalid}
                                         autoComplete="new-password"
                                         disabled={isAuthLoading}
                                     />
-                                    <InputGroupAddon align="inline-end">
-                                        <EyeOff />
+                                    <InputGroupAddon 
+                                        align="inline-end"
+                                        className="cursor-pointer"
+                                        onClick={() => setPasswordVisible((prev) => ({
+                                            ...prev,
+                                            "confirmPassword": !passwordVisible["confirmPassword"]
+                                        }))}  
+                                    >
+                                        {passwordVisible["confirmPassword"] ? 
+                                            <Eye /> : <EyeOff />
+                                        }
                                     </InputGroupAddon>
                                 </InputGroup>
                                 {fieldState.invalid && (
