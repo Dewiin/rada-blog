@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 
 // api
-import { createPost, savePost, fetchPost } from "@/api/posts";
+import { fetchPost, updatePost } from "@/api/posts";
 
 // schemas
 import { formSchema } from "@/zodSchemas/post";
@@ -58,16 +58,34 @@ export function EditPostScreen() {
     }, [post]);
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
-        await toast.promise(createPost(data, setIsLoading, setError, setSuccess, user) , { loading: "Submitting post..." });
+        const body = {
+            ...data,
+            published: true,
+        }
+        if(post) {
+            await toast.promise(
+                updatePost(body, post.id.toLocaleString(), setIsLoading, setError, setSuccess), 
+                { loading: "Submitting post..." }
+            );
+        }
     }
 
     async function onSave(data: z.infer<typeof formSchema>) {
-        await toast.promise(savePost(data, setIsLoading, setError, setSuccess, user), { loading: "Saving post..." });
+        const body = {
+            ...data,
+            published: false,
+        }
+        if(post) {
+            await toast.promise(
+                updatePost(body, post.id.toLocaleString(), setIsLoading, setError, setSuccess),
+                { loading: "Saving post..." }
+            );
+        }
     }
 
     return (
         <>
-        {user && user.role === "AUTHOR" ? 
+        {user && user.role === "AUTHOR" && user.id === post?.author.id ? 
         <div className="md:mx-40 md:my-24 my-12 m-6 flex flex-col gap-12">
             <Label className="text-5xl font-extrabold">
                 Edit Post

@@ -46,7 +46,7 @@ export async function createPost(
     setIsLoading: Function,
     setError: Function,
     setSuccess: Function,
-    user: IUser | null,
+    user: IUser
 ) {
     setIsLoading(true);
     try {
@@ -75,7 +75,7 @@ export async function savePost(
     setIsLoading: Function,
     setError: Function,
     setSuccess: Function,
-    user: IUser | null
+    user: IUser
 ) {
     setIsLoading(true);
     try {
@@ -113,6 +113,12 @@ export async function deletePost(
 }
 
 export async function updatePost(
+    data: {
+        title: string,
+        subtitle: string,
+        content: string,
+        published: boolean
+    },
     postId: string,
     setIsLoading: Function,
     setError: Function,
@@ -121,7 +127,9 @@ export async function updatePost(
     setIsLoading(true);
     try {
         await api(`/api/posts/${postId}`, {
-            method: "PUT"
+            method: "PUT",
+            body: JSON.stringify(data),
+            headers: {"Content-Type": "application/json"}
         }, setError, setSuccess);
     } finally {
         setIsLoading(false);
