@@ -31,9 +31,5 @@ export async function fetchAllActivity(
         method: "GET"
     }, setError);
 
-    const activity = [...(data.clapsActivity || []), ...(data.commentsActivity || [])].sort(
-        (a: IPost, b: IPost) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-    );
-
-    setActivity(activity);
+    if(data.activity) setActivity(data.activity);
 }
