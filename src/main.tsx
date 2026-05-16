@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import AuthProvider from './contexts/AuthContext'
 import ThemeProvider from './contexts/ThemeContext.tsx'
 import UIProvider from './contexts/UIContext.tsx'
@@ -16,9 +16,9 @@ createRoot(document.getElementById('root')!).render(
       <ThemeProvider>
         <UIProvider>
           <Toaster />
-          <BrowserRouter>
+          <HashRouter>
             <App />
-          </BrowserRouter>
+          </HashRouter>
         </UIProvider>
       </ThemeProvider>
     </AuthProvider>
