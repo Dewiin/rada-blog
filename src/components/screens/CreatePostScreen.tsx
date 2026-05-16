@@ -36,11 +36,11 @@ export function CreatePostScreen() {
     })
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
-        await toast.promise(createPost(data, setIsLoading, setError, setSuccess, user) , { loading: "Submitting post..." });
+        if(user) await toast.promise(createPost(data, setIsLoading, setError, setSuccess, user) , { loading: "Submitting post..." });
     }
 
     async function onSave(data: z.infer<typeof formSchema>) {
-        await toast.promise(savePost(data, setIsLoading, setError, setSuccess, user), { loading: "Saving post..." });
+        if(user) await toast.promise(savePost(data, setIsLoading, setError, setSuccess, user), { loading: "Saving post..." });
     }
 
     return (
