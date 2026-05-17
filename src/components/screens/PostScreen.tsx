@@ -85,15 +85,10 @@ export function PostScreen() {
                             </p>
 
                             {/* author */}
-                            <div 
-                                onClick={() => navigate(`/profile/${post?.author.id}`)}
-                                className="flex gap-2 items-center text-sm cursor-pointer"
-                            >
+                            <div className="flex gap-2 items-center text-sm cursor-pointer">
                                 <UserAvatar user={post?.author} size="default" />
                                 <p>
-                                    <span className="hover:underline">
-                                        {post?.author.displayName}
-                                    </span>
+                                    <span> {post?.author.displayName} </span>
                                     {" · "} 
                                     <span className="dark:text-stone-500 text-stone-600">
                                         {post && formatDate(post.createdAt)}

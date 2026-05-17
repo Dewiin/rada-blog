@@ -24,17 +24,9 @@ export function PostPreview({ post, setPosts=()=>{}, showAction=true }: { post: 
         >   
             <div className="flex justify-between items-center">
                 {/* author */}
-                <div 
-                    className="flex gap-2"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/profile/${post.author.id}`)
-                    }}
-                >
+                <div className="flex gap-2">
                     <UserAvatar user={post.author} size="sm" />
-                    <p className="hover:underline">
-                        {post.author.displayName}
-                    </p>
+                    <p> {post.author.displayName} </p>
                 </div>
                 {showAction && 
                     <PostActions post={post} setPosts={setPosts} />

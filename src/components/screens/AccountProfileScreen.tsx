@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router";
 
 // api
 import { fetchAllPublishedPosts, fetchAllUnpublishedPosts, fetchAllActivity } from "@/api/profile";
@@ -8,7 +9,6 @@ import { useAuth } from "@/contexts/AuthContext"
 import { useUI } from "@/contexts/UIContext";
 
 // components
-import { PageUnauthorizedScreen } from "./PageUnauthorizedScreen";
 import { PostPreview } from "@/components/postPreview/PostPreview";
 import { UserAvatar } from "@/components/avatar/UserAvatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -18,10 +18,15 @@ import { SkeletonProfile } from "@/components/skeleton/SkeletonProfile";
 import { FaRegComment } from "react-icons/fa6";
 import { PiHandsClappingLight } from "react-icons/pi";
 
+// screens
+import { PageUnauthorizedScreen } from "./PageUnauthorizedScreen";
+import { PageForbiddenScreen } from "./PageForbiddenScreen";
+
 // types
 import type { IPost } from "../types/Post";
 
 export function AccountProfileScreen() {
+    const { userId } = useParams();
     const { user, isAuthLoading } = useAuth();
     const { isLoading, setIsLoading, setError } = useUI();
     const [publishedPosts, setPublishedPosts] = useState<IPost[]>([]);
@@ -29,10 +34,12 @@ export function AccountProfileScreen() {
     const [activities, setActivities] = useState<any[]>([]);
 
     useEffect(() => {
+        if (isAuthLoading || !user) return;
+
         async function load() {
             setIsLoading(true);
             try {
-                if(user && user.role === "AUTHOR") {
+                if(user && user.role === "AUTHOR" && user.id === userId) {
                     await Promise.all([
                         fetchAllPublishedPosts(setPublishedPosts, setError),
                         fetchAllUnpublishedPosts(setUnpublishedPosts, setError),
@@ -45,9 +52,11 @@ export function AccountProfileScreen() {
         }
 
         load();
-    }, [user]);
+    }, [user, isAuthLoading]);
 
-    if(!isAuthLoading && !user) return <PageUnauthorizedScreen />
+    if(isAuthLoading) return null;
+    if(!user) return <PageUnauthorizedScreen />
+    if(user.id !== userId) return <PageForbiddenScreen />
 
     return (
         <div 
