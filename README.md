@@ -11,6 +11,11 @@
 <ol>
   <li>
     <a href="#introduction">Introduction</a>
+    <ul>
+      <li>
+        <a href="#api">API</a>
+      </li>
+    </ul>
   </li>
   <li>
     <a href="#features">Features</a>
@@ -48,11 +53,6 @@ Rada's frontend communicates with a separate RESTful API built with Express, Pri
 - 👏 Engagement Features
     - Clap/react system for blog posts.
     - Track user engagement and post popularity.
-- 🔐 Authentication & Security
-    - Secure JWT authentication with refresh token flow.
-    - Google OAuth integration for quick sign-in.
-    - Protected author-only routes and actions.
-    - HTTP-only cookies for improved session security.
 
 ### Built With
 
@@ -62,10 +62,6 @@ Rada's frontend communicates with a separate RESTful API built with Express, Pri
 [![Vite][Vite]][Vite-url]
 [![Shadcn][Shadcn]][Shadcn-url]
 [![Tailwind][Tailwind]][Tailwind-url]
-[![Node][Node]][Node-url]
-[![Express][Express]][Express-url]
-[![PostgreSQL][PostgreSQL]][PostgreSQL-url]
-[![Prisma][Prisma]][Prisma-url]
 
 <p align="right"><a href="#readme-top">Back to top</a></p>
 
@@ -149,15 +145,3 @@ SOFTWARE.
 
 [Tailwind]: https://img.shields.io/badge/tailwindcss-%2323B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
 [Tailwind-url]: https://tailwindcss.com/
-
-[Node]: https://img.shields.io/badge/Node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white
-[Node-url]: https://nodejs.org/en
-
-[Express]: https://img.shields.io/badge/Express.js-404d59.svg?style=for-the-badge&logo=express&logoColor=61DAFB
-[Express-url]: https://expressjs.com/
-
-[PostgreSQL]: https://img.shields.io/badge/Postgres-316192.svg?style=for-the-badge&logo=postgresql&logoColor=white
-[PostgreSQL-url]: https://www.postgresql.org/
-
-[Prisma]: https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white
-[Prisma-url]: https://www.prisma.io/docs 
