@@ -31,6 +31,11 @@ Rada Blog is a full-stack blogging platform built with React, TypeScript, Expres
 
 This repository contains the client-side application.
 
+## API
+Rada's frontend communicates with a separate RESTful API built with Express, Prisma, and PostgreSQL.
+- API Repository: https://github.com/Dewiin/rada-blog-api
+- Backend Deployment: https://rada-blog-api.onrender.com
+
 ## Features
 - ✍️ Rich Text Blog Editor
     - Create and publish posts using a modern Tiptap editor.
