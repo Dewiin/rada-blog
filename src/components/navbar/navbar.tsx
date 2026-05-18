@@ -206,7 +206,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 onClick={() => onLogoClick()}
               >
                 <div className="text-2xl">{logo}</div>
-                <span className="hidden font-bold text-2xl sm:inline-block">Rada.</span>
+                <span className="hidden font-bold text-2xl sm:inline-block">Rada</span>
               </button>
               {/* Navigation menu
               {!isMobile && (
