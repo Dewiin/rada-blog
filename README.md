@@ -13,7 +13,7 @@
     <a href="#introduction">Introduction</a>
     <ul>
       <li>
-        <a href="#server">API</a>
+        <a href="#server">Server</a>
       </li>
     </ul>
   </li>
